@@ -1,8 +1,8 @@
 import React from 'react';
 import './index.scss';
 
-const Board = () => {
+const SALBoard = () => {
   return <div className="sal-board">Board</div>;
 };
 
-export default Board;
+export default SALBoard;
