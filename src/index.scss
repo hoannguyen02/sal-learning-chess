@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@mixin clear {
+  &::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+.sal-chess-clear-fix {
+  @include clear();
+}

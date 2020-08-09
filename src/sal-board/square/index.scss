@@ -1,0 +1,13 @@
+.sal-chess-square {
+  width: 12.5%;
+  padding-bottom: 12.5%;
+  background-color: #efdec3;
+  border: 0;
+  outline: 0;
+  margin: 0;
+  box-shadow: none;
+  float: left;
+  &.white {
+    background-color: #946136;
+  }
+}
