@@ -1,11 +1,11 @@
 import React from 'react';
 import './index.scss';
 
-const Block = ({ onClick, disabled, white }) => {
+const Block = ({ onClick, disabled, white, block }) => {
   return (
     <button
       className={`sal-chess-block ${white ? 'white' : ''}`}
-      onClick={onClick}
+      onClick={() => onClick(block)}
       disabled={disabled}
     />
   );

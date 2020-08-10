@@ -6,11 +6,14 @@ export default class App extends React.Component {
   state = {
     blocks: generateBlocks(),
   };
+  handleClick = (block) => {
+    console.log(block);
+  };
   render() {
     const { blocks } = this.state;
     return (
       <>
-        <SALBoard blocks={blocks} />
+        <SALBoard blocks={blocks} onClick={this.handleClick} />
       </>
     );
   }
