@@ -1,14 +1,14 @@
 import React from 'react';
 import './index.scss';
 
-const Square = ({ onClick, disabled, white }) => {
+const Block = ({ onClick, disabled, white }) => {
   return (
     <button
-      className={`sal-chess-square ${white ? 'white' : ''}`}
+      className={`sal-chess-block ${white ? 'white' : ''}`}
       onClick={onClick}
       disabled={disabled}
     />
   );
 };
 
-export default Square;
+export default Block;

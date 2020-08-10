@@ -1,32 +1,21 @@
 import React from 'react';
-import { HORIZONTAL_CAPTION, VERTICAL_CAPTION } from '../constants/index';
+import Block from './block';
 import './index.scss';
-import Square from './square';
 
-const SALBoard = () => {
-  const items = [];
-  for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-      items.push([
-        { index: i, info: HORIZONTAL_CAPTION[i] },
-        { index: j, info: VERTICAL_CAPTION[j] },
-      ]);
-    }
-  }
-
+const SALBoard = ({ blocks }) => {
   return (
     <div className="sal-board">
       <div className="sal-board-game sal-chess-clear-fix">
-        {items.map((item, index) => (
-          <Square
-            item={item}
+        {blocks.map((block, index) => (
+          <Block
+            block={block}
             white={
-              (item[0].index % 2 === 0 && item[1].index % 2 !== 0) ||
-              (item[0].index % 2 !== 0 && item[1].index % 2 === 0)
+              (block[0].index % 2 === 0 && block[1].index % 2 !== 0) ||
+              (block[0].index % 2 !== 0 && block[1].index % 2 === 0)
                 ? 'white'
                 : ''
             }
-            key={`sal-chess-square-${index}`}
+            key={`sal-chess-block-${index}`}
           />
         ))}
       </div>
