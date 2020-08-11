@@ -2,17 +2,17 @@ import React from 'react';
 import Block from './block';
 import './index.scss';
 
-const SALBoard = ({ blocks, onClick }) => {
+const SALBoard = ({ board, onClick }) => {
   return (
     <div className="sal-board">
       <div className="sal-board-game sal-chess-clear-fix">
-        {blocks.map((block, index) => (
+        {board.map((block, index) => (
           <Block
             block={block}
             onClick={onClick}
             white={
-              (block[0].index % 2 === 0 && block[1].index % 2 !== 0) ||
-              (block[0].index % 2 !== 0 && block[1].index % 2 === 0)
+              (block.pos[0] % 2 === 0 && block.pos[1] % 2 !== 0) ||
+              (block.pos[0] % 2 !== 0 && block.pos[1] % 2 === 0)
                 ? 'white'
                 : ''
             }

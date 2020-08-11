@@ -7,7 +7,9 @@ const Block = ({ onClick, disabled, white, block }) => {
       className={`sal-chess-block ${white ? 'white' : ''}`}
       onClick={() => onClick(block)}
       disabled={disabled}
-    />
+    >
+      {block.piece ? block.piece.type : ''}
+    </button>
   );
 };
 
