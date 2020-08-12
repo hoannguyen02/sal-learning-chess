@@ -9,6 +9,7 @@ function generateBlocks() {
         pos: [i, j],
         caption: `${HORIZONTAL_CAPTION[i]}${VERTICAL_CAPTION[j]}`,
         piece: null,
+        disabled: true,
       });
     }
   }

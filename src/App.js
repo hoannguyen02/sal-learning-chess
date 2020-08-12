@@ -26,14 +26,17 @@ export default class App extends React.Component {
     }));
   };
 
-  checkSkills = () => {};
+  checkSkills = (block) => {
+    alert(block.piece.type);
+  };
 
   validateMove = () => {};
 
   checkGameOver = () => {};
 
   handleClick = (block) => {
-    console.log(block);
+    this.checkSkills(block);
+    console.log('block', block);
   };
 
   render() {

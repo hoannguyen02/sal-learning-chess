@@ -8,6 +8,7 @@ function updateBoard(board, pieces) {
     );
     if (idx >= 0) {
       newBoard[idx].piece = piece;
+      newBoard[idx].disabled = false;
     }
   });
   return newBoard;
