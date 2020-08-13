@@ -1,31 +1,27 @@
 import React from 'react';
 import SALBoard from './sal-board';
-import { generateBlocks, initialPlayer, updateBoard } from './utils';
+import { generateBlocks, initialPlayer, setupPiecesForPlayers } from './utils';
 import { PlayerName } from './constants';
 
 export default class App extends React.Component {
   state = {
     board: generateBlocks(),
     blackPlayer: initialPlayer(PlayerName.BLACK), // Another user or computer
-    whilePlayer: initialPlayer(PlayerName.WHITE), // User
+    whitePlayer: initialPlayer(PlayerName.WHITE), // User
   };
 
   componentDidMount() {
-    this.updateBoard();
-  }
-
-  updateBoard = () => {
-    const { board, blackPlayer, whilePlayer } = this.state;
-    const newBoard = updateBoard(board, [
+    // Setup pieces for 2 players in board
+    const { board, blackPlayer, whitePlayer } = this.state;
+    const newBoard = setupPiecesForPlayers(board, [
       ...blackPlayer.pieces,
-      ...whilePlayer.pieces,
+      ...whitePlayer.pieces,
     ]);
     this.setState((prevState) => ({
       ...prevState,
       board: newBoard,
     }));
-  };
-
+  }
   checkSkills = (block) => {
     alert(block.piece.type);
   };

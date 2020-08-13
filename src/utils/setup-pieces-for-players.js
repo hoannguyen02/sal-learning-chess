@@ -1,6 +1,8 @@
-export { updateBoard };
+import { PieceType } from '../constants';
 
-function updateBoard(board, pieces) {
+export { setupPiecesForPlayers };
+
+function setupPiecesForPlayers(board, pieces) {
   const newBoard = [...board];
   pieces.forEach((piece) => {
     const idx = newBoard.findIndex(
@@ -8,7 +10,9 @@ function updateBoard(board, pieces) {
     );
     if (idx >= 0) {
       newBoard[idx].piece = piece;
-      newBoard[idx].disabled = false;
+      if (piece.type === PieceType.PAWN || piece.type === PieceType.KNIGHT) {
+        newBoard[idx].disabled = false;
+      }
     }
   });
   return newBoard;

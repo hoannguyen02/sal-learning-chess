@@ -1,3 +1,3 @@
 export * from './blocks';
 export * from './player';
-export * from './update-board';
+export * from './setup-pieces-for-players';
