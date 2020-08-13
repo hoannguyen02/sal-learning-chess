@@ -2,31 +2,34 @@ import { PlayerName, BLACK_PIECES, WHITE_PIECES } from '../constants';
 
 export { initialPlayer };
 
-function initialPlayer(name) {
+function initialPlayer(playerName) {
   return {
-    name,
-    pieces: generatePiecesForPlayer(name),
+    playerName,
+    pieces: generatePiecesForPlayer(playerName),
   };
 }
 
-function generatePiecesForPlayer(name) {
-  if (name === PlayerName.BLACK) {
-    return BLACK_PIECES.map(({ position, type }) =>
-      generatePiece(position, type)
+function generatePiecesForPlayer(playerName) {
+  if (playerName === PlayerName.BLACK) {
+    return BLACK_PIECES.map(({ prevPosition, position, type, line }) =>
+      generatePiece({ prevPosition, position, type, playerName, line })
     );
   }
 
-  return WHITE_PIECES.map(({ position, type }) =>
-    generatePiece(position, type)
+  return WHITE_PIECES.map(({ prevPosition, position, type, line }) =>
+    generatePiece({ prevPosition, position, type, playerName, line })
   );
 }
 
-function generatePiece(pos, type) {
+function generatePiece({ prevPosition, position, type, playerName, line }) {
   return {
-    pos,
+    prevPosition,
+    position,
     type,
+    playerName,
+    line,
     move: function name(nextPos) {
-      console.log(`${type} at ${pos[0][1]} moving to ${nextPos[0][1]}`);
+      console.log(`${type} at ${position[0][1]} moving to ${nextPos[0][1]}`);
     },
   };
 }

@@ -11,8 +11,8 @@ const SALBoard = ({ board, onClick }) => {
             block={block}
             onClick={onClick}
             white={
-              (block.pos[0] % 2 === 0 && block.pos[1] % 2 !== 0) ||
-              (block.pos[0] % 2 !== 0 && block.pos[1] % 2 === 0)
+              (block.position[0] % 2 === 0 && block.position[1] % 2 !== 0) ||
+              (block.position[0] % 2 !== 0 && block.position[1] % 2 === 0)
                 ? 'white'
                 : ''
             }

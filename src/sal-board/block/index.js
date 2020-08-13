@@ -4,7 +4,9 @@ import './index.scss';
 const Block = ({ onClick, white, block }) => {
   return (
     <button
-      className={`sal-chess-block ${white ? 'white' : ''}`}
+      className={`sal-chess-block ${white ? 'white' : ''} ${
+        block.highLight ? 'high-light' : ''
+      }`}
       onClick={() => onClick(block)}
       disabled={block.disabled}
     >

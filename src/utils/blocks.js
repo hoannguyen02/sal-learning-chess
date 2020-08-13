@@ -6,10 +6,11 @@ function generateBlocks() {
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       items.push({
-        pos: [i, j],
-        caption: `${HORIZONTAL_CAPTION[i]}${VERTICAL_CAPTION[j]}`,
+        position: [i, j],
+        caption: `${HORIZONTAL_CAPTION[j]}${VERTICAL_CAPTION[i]}`,
         piece: null,
         disabled: true,
+        highLight: false,
       });
     }
   }

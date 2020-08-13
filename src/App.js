@@ -1,6 +1,12 @@
 import React from 'react';
 import SALBoard from './sal-board';
-import { generateBlocks, initialPlayer, setupPiecesForPlayers } from './utils';
+import {
+  generateBlocks,
+  initialPlayer,
+  setupPiecesForPlayers,
+  getAvailablePositions,
+  highLightBlocks,
+} from './utils';
 import { PlayerName } from './constants';
 
 export default class App extends React.Component {
@@ -8,6 +14,8 @@ export default class App extends React.Component {
     board: generateBlocks(),
     blackPlayer: initialPlayer(PlayerName.BLACK), // Another user or computer
     whitePlayer: initialPlayer(PlayerName.WHITE), // User
+    currentBlock: null,
+    isWhiteNext: true,
   };
 
   componentDidMount() {
@@ -22,17 +30,39 @@ export default class App extends React.Component {
       board: newBoard,
     }));
   }
-  checkSkills = (block) => {
-    alert(block.piece.type);
-  };
 
   validateMove = () => {};
 
   checkGameOver = () => {};
 
   handleClick = (block) => {
-    this.checkSkills(block);
-    console.log('block', block);
+    const {
+      currentBlock,
+      board,
+      isWhiteNext,
+      whitePlayer,
+      blackPlayer,
+    } = this.state;
+    if (currentBlock && !isWhiteNext) {
+      // Move or catch
+    } else {
+      /**
+       * 1. Get available blocks to move and which ones can catch then Hight hight light those
+       * 2. Set current block state in order to move or catch later on
+       */
+      const availablePositions = getAvailablePositions({
+        block,
+        board,
+        isWhiteNext,
+        player: isWhiteNext ? whitePlayer : blackPlayer,
+      });
+      const newBoard = highLightBlocks(board, availablePositions);
+      this.setState((prevState) => ({
+        ...prevState,
+        currentBlock: block,
+        board: newBoard,
+      }));
+    }
   };
 
   render() {

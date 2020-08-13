@@ -11,6 +11,20 @@
   &.white {
     background-color: #946136;
   }
+  &.high-light {
+    position: relative;
+    &:after {
+      position: absolute;
+      content: '';
+      width: 40%;
+      height: 40%;
+      display: block;
+      left: 30%;
+      top: 30%;
+      background: #8ea68e;
+      border-radius: 50%;
+    }
+  }
   &:disabled {
     cursor: not-allowed;
   }
