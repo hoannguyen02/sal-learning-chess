@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.scss';
+import PieceIcon from './icons';
 
 const Block = ({ onClick, white, block }) => {
   return (
@@ -10,7 +11,9 @@ const Block = ({ onClick, white, block }) => {
       onClick={() => onClick(block)}
       disabled={block.disabled}
     >
-      {block.piece ? block.piece.type : ''}
+      {block.piece && (
+        <PieceIcon type={block.piece.type} isWhite={block.piece.isWhite} />
+      )}
     </button>
   );
 };

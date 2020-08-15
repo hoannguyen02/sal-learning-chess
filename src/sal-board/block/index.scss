@@ -7,24 +7,32 @@
   margin: 0;
   box-shadow: none;
   float: left;
+  position: relative;
   &.white {
     background-color: #946136;
   }
   &.high-light {
-    position: relative;
     &:after {
       position: absolute;
       content: '';
-      width: 40%;
-      height: 40%;
+      width: 25%;
+      height: 25%;
       display: block;
-      left: 30%;
-      top: 30%;
+      left: 37.5%;
+      top: 37.5%;
       background: #8ea68e;
       border-radius: 50%;
     }
   }
   &:disabled {
     cursor: not-allowed;
+  }
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
   }
 }
