@@ -7,6 +7,8 @@ import {
   getAvailablePositions,
   highLightBlocks,
   resetAvailablePositions,
+  movePiece,
+  changePieceStateAfterMoved,
 } from './utils';
 import { PlayerName } from './constants';
 
@@ -42,7 +44,7 @@ export default class App extends React.Component {
     const { currentBlock } = this.state;
 
     if (!currentBlock) {
-      this.handleGetNewAvailablePositions(block);
+      this.handleGetNewPositions(block);
     } else {
       // Incase user click again in that block
       if (
@@ -58,25 +60,74 @@ export default class App extends React.Component {
         block.piece &&
         block.piece.playerName === currentBlock.piece.playerName
       ) {
-        this.handleResetAvailablePositions();
-        this.handleGetNewAvailablePositions(block);
+        this.handleResetAndGetNewPositions(block);
       } else {
-        // Move or catch
+        // Move if there is no piece in block, otherwise catch
+        if (!block.piece) {
+          this.handleMovePiece(block);
+        } else {
+        }
       }
     }
   };
 
-  handleResetAvailablePositions = () => {
-    const { board, availablePositions } = this.state;
-    const resetBoard = resetAvailablePositions(board, availablePositions);
+  handleResetAndGetNewPositions = (block) => {
+    const {
+      board,
+      availablePositions,
+      isWhiteNext,
+      whitePlayer,
+      blackPlayer,
+    } = this.state;
+    let newBoard = resetAvailablePositions(board, availablePositions);
+    const newPositions = getAvailablePositions({
+      block,
+      board,
+      isWhiteNext,
+      player: isWhiteNext ? whitePlayer : blackPlayer,
+    });
+    newBoard = highLightBlocks(newBoard, newPositions);
     this.setState((prevState) => ({
       ...prevState,
-      board: resetBoard,
-      availablePositions: null,
+      currentBlock: block,
+      board: newBoard,
+      availablePositions: newPositions,
     }));
   };
 
-  handleGetNewAvailablePositions = (block) => {
+  handleMovePiece = (block) => {
+    const {
+      currentBlock,
+      board,
+      isWhiteNext,
+      whitePlayer,
+      blackPlayer,
+      availablePositions,
+    } = this.state;
+    // Move piece
+    let newBoard = movePiece(board, currentBlock, block);
+    // Reset available positions, also current block
+    newBoard = resetAvailablePositions(newBoard, [
+      ...availablePositions,
+      block.piece.position,
+    ]);
+    // Change pieces state after moved
+    newBoard = changePieceStateAfterMoved(
+      newBoard,
+      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
+    );
+    // Update current block to null
+    // Update isWhiteNext state
+    this.setState((prevState) => ({
+      ...prevState,
+      board: newBoard,
+      currentBlock: null,
+      availablePositions: null,
+      isWhiteNext: !prevState.isWhiteNext,
+    }));
+  };
+
+  handleGetNewPositions = (block) => {
     const { board, isWhiteNext, whitePlayer, blackPlayer } = this.state;
     /**
      * 1. Get available blocks to move and which ones can catch then Hight hight light those
