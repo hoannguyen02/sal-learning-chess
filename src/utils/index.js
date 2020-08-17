@@ -6,3 +6,5 @@ export * from './high-light-blocks';
 export * from './reset-available-positions';
 export * from './move-piece';
 export * from './change-pieces-state-after-moved';
+export * from './remove-piece-from-block';
+export * from './add-piece-from-current-to-new-block';

@@ -9,6 +9,8 @@ import {
   resetAvailablePositions,
   movePiece,
   changePieceStateAfterMoved,
+  removePieceFromBlock,
+  addPieceFromCurrentToNewBlock,
 } from './utils';
 import { PlayerName } from './constants';
 
@@ -35,8 +37,6 @@ export default class App extends React.Component {
       board: newBoard,
     }));
   }
-
-  validateMove = () => {};
 
   checkGameOver = () => {};
 
@@ -66,6 +66,7 @@ export default class App extends React.Component {
         if (!block.piece) {
           this.handleMovePiece(block);
         } else {
+          this.handleCatchPiece(block);
         }
       }
     }
@@ -114,6 +115,38 @@ export default class App extends React.Component {
       ...availablePositions,
       block.piece.position,
     ]);
+    // Change pieces state after moved
+    newBoard = changePieceStateAfterMoved(
+      newBoard,
+      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
+    );
+    // Update current block to null
+    // Update isWhiteNext state
+    this.setState((prevState) => ({
+      ...prevState,
+      board: newBoard,
+      currentBlock: null,
+      availablePositions: null,
+      isWhiteNext: !prevState.isWhiteNext,
+    }));
+  };
+
+  handleCatchPiece = (block) => {
+    const {
+      board,
+      currentBlock,
+      isWhiteNext,
+      whitePlayer,
+      blackPlayer,
+    } = this.state;
+    let newBoard = removePieceFromBlock(board, block);
+    newBoard = addPieceFromCurrentToNewBlock(
+      board,
+      currentBlock,
+      block,
+      isWhiteNext
+    );
+    newBoard = removePieceFromBlock(board, currentBlock);
     // Change pieces state after moved
     newBoard = changePieceStateAfterMoved(
       newBoard,
