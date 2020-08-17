@@ -10,10 +10,94 @@ export function getAvailablePositions({
   switch (block.piece.type) {
     case PieceType.PAWN:
       return getPositionsForPawn({ block, isWhiteNext, playerName, board });
+    case PieceType.ROOK:
+      return getPositionsForRook({ block, isWhiteNext, playerName, board });
 
     default:
       return [];
   }
+}
+
+function isEmptyPieceBlock(board, position) {
+  const idx = board.findIndex(
+    (block) =>
+      block.position[0] === position[0] && block.position[1] === position[1]
+  );
+  return idx >= 0 ? !board[idx].piece : false;
+}
+
+function getPositionsForRook({ block, isWhiteNext, playerName, board }) {
+  const { position } = block;
+  let positions = [];
+  positions = [
+    // Vertical direction
+    ...rookMovesStraightLinePositions({
+      x: position[0],
+      y: position[1],
+      verticalDirection: true,
+      playerName,
+      board,
+    }),
+    // Horizontal direction
+    ...rookMovesStraightLinePositions({
+      x: position[0],
+      y: position[1],
+      verticalDirection: false,
+      playerName,
+      board,
+    }),
+  ];
+  return positions;
+}
+
+function rookMovesStraightLinePositions({
+  playerName,
+  board,
+  verticalDirection,
+  x,
+  y,
+}) {
+  let firstIndex = verticalDirection ? x : y;
+  const positions = [];
+  while (firstIndex > 0) {
+    firstIndex--;
+    const idx = findPositionIndexInBoard(
+      verticalDirection
+        ? { board, x: firstIndex, y }
+        : { board, x, y: firstIndex }
+    );
+    if (!board[idx].piece) {
+      positions.push(verticalDirection ? [firstIndex, y] : [x, firstIndex]);
+    } else if (board[idx].piece.playerName !== playerName) {
+      positions.push(verticalDirection ? [firstIndex, y] : [x, firstIndex]);
+      firstIndex = 0;
+    } else {
+      firstIndex = 0;
+    }
+  }
+  let secondIndex = verticalDirection ? x : y;
+  while (secondIndex < 7) {
+    secondIndex++;
+    const idx = findPositionIndexInBoard(
+      verticalDirection
+        ? { board, x: secondIndex, y }
+        : { board, x, y: secondIndex }
+    );
+    if (!board[idx].piece) {
+      positions.push(verticalDirection ? [secondIndex, y] : [x, secondIndex]);
+    } else if (board[idx].piece.playerName !== playerName) {
+      positions.push(verticalDirection ? [secondIndex, y] : [x, secondIndex]);
+      secondIndex = 7;
+    } else {
+      secondIndex = 7;
+    }
+  }
+
+  return positions;
+}
+
+function findPositionIndexInBoard({ board, x, y }) {
+  return board.findIndex((b) => b.position[0] === x && b.position[1] === y);
 }
 
 function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
@@ -56,14 +140,6 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
       );
       return [...blocks, ...catchNeighbors];
   }
-}
-
-function isEmptyPieceBlock(board, position) {
-  const idx = board.findIndex(
-    (block) =>
-      block.position[0] === position[0] && block.position[1] === position[1]
-  );
-  return idx >= 0 ? !board[idx].piece : false;
 }
 
 function pawnCatchNeighbors(board, position, isWhiteNext, playerName) {
