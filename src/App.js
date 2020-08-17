@@ -80,11 +80,14 @@ export default class App extends React.Component {
       blackPlayer,
     } = this.state;
     let newBoard = resetAvailablePositions(board, availablePositions);
+    const playerName = isWhiteNext
+      ? whitePlayer.playerName
+      : blackPlayer.playerName;
     const newPositions = getAvailablePositions({
       block,
       board,
       isWhiteNext,
-      player: isWhiteNext ? whitePlayer : blackPlayer,
+      playerName,
     });
     newBoard = highLightBlocks(newBoard, newPositions);
     this.setState((prevState) => ({
@@ -133,11 +136,14 @@ export default class App extends React.Component {
      * 1. Get available blocks to move and which ones can catch then Hight hight light those
      * 2. Set current block state in order to move or catch later on
      */
+    const playerName = isWhiteNext
+      ? whitePlayer.playerName
+      : blackPlayer.playerName;
     const availablePositions = getAvailablePositions({
       block,
       board,
       isWhiteNext,
-      player: isWhiteNext ? whitePlayer : blackPlayer,
+      playerName,
     });
     const newBoard = highLightBlocks(board, availablePositions);
     this.setState((prevState) => ({

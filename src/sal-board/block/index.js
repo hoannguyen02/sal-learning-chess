@@ -7,7 +7,7 @@ const Block = ({ onClick, white, block }) => {
     <button
       className={`sal-chess-block ${white ? 'white' : ''} ${
         block.highLight ? 'high-light' : ''
-      }`}
+      } ${block.catchHighLight ? 'catch-high-light' : ''}`}
       onClick={() => onClick(block)}
       disabled={block.disabled}
     >

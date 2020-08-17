@@ -9,6 +9,7 @@ function highLightBlocks(board, positions) {
     );
     if (idx >= 0) {
       newBoard[idx].highLight = true;
+      newBoard[idx].catchHighLight = newBoard[idx].piece !== null;
       newBoard[idx].disabled = false;
     }
   });
