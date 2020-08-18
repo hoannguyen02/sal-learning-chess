@@ -155,67 +155,75 @@ function bishopB1Positions({ x, y, playerName, board }) {
 function getPositionsForRook({ block, playerName, board }) {
   const { position } = block;
   let positions = [];
+  const x = position[0];
+  const y = position[1];
   positions = [
     // Vertical direction
-    ...rookMovesStraightLinePositions({
-      x: position[0],
-      y: position[1],
-      verticalDirection: true,
-      playerName,
-      board,
-    }),
+    ...rookVerticalPositions({ x, y, playerName, board }),
     // Horizontal direction
-    ...rookMovesStraightLinePositions({
-      x: position[0],
-      y: position[1],
-      verticalDirection: false,
-      playerName,
-      board,
-    }),
+    ...rookHorizontalPositions({ x, y, playerName, board }),
   ];
   return positions;
 }
 
-function rookMovesStraightLinePositions({
-  playerName,
-  board,
-  verticalDirection,
-  x,
-  y,
-}) {
-  let firstIndex = verticalDirection ? x : y;
+function rookVerticalPositions({ x, y, playerName, board }) {
+  let newRookX = x;
   const positions = [];
-  while (firstIndex > 0) {
-    firstIndex--;
-    const idx = findPositionIndexInBoard(
-      verticalDirection
-        ? { board, x: firstIndex, y }
-        : { board, x, y: firstIndex }
-    );
+  while (newRookX > 0) {
+    newRookX--;
+    const idx = findPositionIndexInBoard({ board, x: newRookX, y });
     if (!board[idx].piece) {
-      positions.push(verticalDirection ? [firstIndex, y] : [x, firstIndex]);
+      positions.push([newRookX, y]);
     } else if (board[idx].piece.playerName !== playerName) {
-      positions.push(verticalDirection ? [firstIndex, y] : [x, firstIndex]);
-      firstIndex = 0;
+      positions.push([newRookX, y]);
+      newRookX = 0;
     } else {
-      firstIndex = 0;
+      newRookX = 0;
     }
   }
-  let secondIndex = verticalDirection ? x : y;
-  while (secondIndex < 7) {
-    secondIndex++;
-    const idx = findPositionIndexInBoard(
-      verticalDirection
-        ? { board, x: secondIndex, y }
-        : { board, x, y: secondIndex }
-    );
+  let newRookX2 = x;
+  while (newRookX2 < 7) {
+    newRookX2++;
+    const idx = findPositionIndexInBoard({ board, x: newRookX2, y });
     if (!board[idx].piece) {
-      positions.push(verticalDirection ? [secondIndex, y] : [x, secondIndex]);
+      positions.push([newRookX2, y]);
     } else if (board[idx].piece.playerName !== playerName) {
-      positions.push(verticalDirection ? [secondIndex, y] : [x, secondIndex]);
-      secondIndex = 7;
+      positions.push([newRookX2, y]);
+      newRookX2 = 7;
     } else {
-      secondIndex = 7;
+      newRookX2 = 7;
+    }
+  }
+
+  return positions;
+}
+
+function rookHorizontalPositions({ x, y, playerName, board }) {
+  let newRookY = y;
+  const positions = [];
+  while (newRookY > 0) {
+    newRookY--;
+    const idx = findPositionIndexInBoard({ board, x, y: newRookY });
+    if (!board[idx].piece) {
+      positions.push([x, newRookY]);
+    } else if (board[idx].piece.playerName !== playerName) {
+      positions.push([x, newRookY]);
+      newRookY = 0;
+    } else {
+      newRookY = 0;
+    }
+  }
+  let newRookY2 = y;
+  while (newRookY2 < 7) {
+    newRookY2++;
+    const idx = findPositionIndexInBoard({ board, x, y: newRookY2 });
+    if (!board[idx].piece) {
+      positions.push([x, newRookY2]);
+    } else if (board[idx].piece.playerName !== playerName) {
+      positions.push([x, newRookY2]);
+      newRookY2 = 7;
+    } else {
+      newRookY2 = 7;
     }
   }
 
