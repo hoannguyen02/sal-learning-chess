@@ -14,6 +14,11 @@ export function getAvailablePositions({
       return getPositionsForRook({ block, isWhiteNext, playerName, board });
     case PieceType.BISHOP:
       return getPositionsForBishop({ block, isWhiteNext, playerName, board });
+    case PieceType.QUEEN:
+      return [
+        ...getPositionsForRook({ block, isWhiteNext, playerName, board }),
+        ...getPositionsForBishop({ block, isWhiteNext, playerName, board }),
+      ];
 
     default:
       return [];
