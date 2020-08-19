@@ -364,13 +364,20 @@ function rookHorizontalPositions({ x, y, playerName, board }) {
 function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
   const { position, piece } = block;
   const blocks = [];
-  let catchNeighbors = [];
   // Move forward 1
   const forwardOneIndex = isWhiteNext ? position[0] - 1 : position[0] + 1;
   const forwardOnePosition = [forwardOneIndex, position[1]];
   if (isEmptyPieceBlock(board, forwardOnePosition)) {
     blocks.push(forwardOnePosition);
   }
+  // Catch others
+  const catchNeighbors = pawnCatchNeighbors(
+    board,
+    position,
+    isWhiteNext,
+    playerName
+  );
+
   switch (piece.line) {
     case 1:
       const forwardTwoIndex = isWhiteNext ? position[0] - 2 : position[0] + 2;
@@ -379,26 +386,12 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
       if (isEmptyPieceBlock(board, forwardTwoPosition)) {
         blocks.push(forwardTwoPosition);
       }
-      // Catch others
-      catchNeighbors = pawnCatchNeighbors(
-        board,
-        position,
-        isWhiteNext,
-        playerName
-      );
       return [...blocks, ...catchNeighbors];
     case 5:
       // Think more later in case just other just start move pawn or not
       break;
 
     default:
-      // Catch others
-      catchNeighbors = pawnCatchNeighbors(
-        board,
-        position,
-        isWhiteNext,
-        playerName
-      );
       return [...blocks, ...catchNeighbors];
   }
 }
