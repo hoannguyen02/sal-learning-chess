@@ -11,9 +11,8 @@ function initialPlayer(playerName) {
 
 function generatePiecesForPlayer(playerName) {
   if (playerName === PlayerName.BLACK) {
-    return BLACK_PIECES.map(({ prevPosition, position, type, line }) =>
+    return BLACK_PIECES.map(({ position, type, line }) =>
       generatePiece({
-        prevPosition,
         position,
         type,
         playerName,
@@ -23,9 +22,8 @@ function generatePiecesForPlayer(playerName) {
     );
   }
 
-  return WHITE_PIECES.map(({ prevPosition, position, type, line }) =>
+  return WHITE_PIECES.map(({ position, type, line }) =>
     generatePiece({
-      prevPosition,
       position,
       type,
       playerName,
@@ -35,16 +33,8 @@ function generatePiecesForPlayer(playerName) {
   );
 }
 
-function generatePiece({
-  prevPosition,
-  position,
-  type,
-  playerName,
-  line,
-  isWhite,
-}) {
+function generatePiece({ position, type, playerName, line, isWhite }) {
   return {
-    prevPosition,
     position,
     type,
     playerName,
