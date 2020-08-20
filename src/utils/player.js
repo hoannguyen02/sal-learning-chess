@@ -40,8 +40,5 @@ function generatePiece({ position, type, playerName, line, isWhite }) {
     playerName,
     line,
     isWhite,
-    move: function name(nextPos) {
-      console.log(`${type} at ${position[0][1]} moving to ${nextPos[0][1]}`);
-    },
   };
 }
