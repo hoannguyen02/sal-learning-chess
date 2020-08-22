@@ -12,8 +12,21 @@ function movePiece(board, currentBlock, newBlock, isWhiteNext) {
   );
   newBoard[newIndex].piece = currentBlock.piece;
   newBoard[newIndex].piece.position = newBlock.position;
-  if (currentBlock.piece.type === PieceType.PAWN) {
-    newBoard[newIndex].piece.line = isWhiteNext ? 7 - newBlock[0] : newBlock[0];
+  switch (currentBlock.piece.type) {
+    case PieceType.PAWN:
+      newBoard[newIndex].piece.line = isWhiteNext
+        ? 7 - newBlock[0]
+        : newBlock[0];
+      break;
+    case PieceType.ROOK:
+    case PieceType.KING:
+      if (!currentBlock.piece.isMoved) {
+        newBoard[newIndex].piece.isMoved = true;
+      }
+      break;
+
+    default:
+      break;
   }
   // Remove piece from current block
   const currentIndex = newBoard.findIndex(

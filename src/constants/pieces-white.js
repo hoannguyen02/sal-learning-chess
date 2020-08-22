@@ -11,8 +11,8 @@ export const WHITE_PIECES = [
   { position: [6, 6], line: 1, type: PieceType.PAWN },
   { position: [6, 7], line: 1, type: PieceType.PAWN },
   // Rook
-  { position: [7, 0], type: PieceType.ROOK },
-  { position: [7, 7], type: PieceType.ROOK },
+  { position: [7, 0], type: PieceType.ROOK, isMoved: false },
+  { position: [7, 7], type: PieceType.ROOK, isMoved: false },
   // Knight
   { position: [7, 1], type: PieceType.KNIGHT },
   { position: [7, 6], type: PieceType.KNIGHT },
@@ -22,5 +22,5 @@ export const WHITE_PIECES = [
   // Queen
   { position: [7, 3], type: PieceType.QUEEN },
   // King
-  { position: [7, 4], type: PieceType.KING },
+  { position: [7, 4], type: PieceType.KING, isMoved: false },
 ];

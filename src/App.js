@@ -11,6 +11,8 @@ import {
   changePieceStateAfterMoved,
   removePieceFromBlock,
   addPieceFromCurrentToNewBlock,
+  isCastlingMove,
+  castlingMovePiece,
 } from './utils';
 import { PlayerName } from './constants';
 
@@ -64,7 +66,11 @@ export default class App extends React.Component {
       } else {
         // Move if there is no piece in block, otherwise catch
         if (!block.piece) {
-          this.handleMovePiece(block);
+          if (isCastlingMove(currentBlock, block)) {
+            this.handleCastlingMove(block);
+          } else {
+            this.handleMovePiece(block);
+          }
         } else {
           this.handleCatchPiece(block);
         }
@@ -96,6 +102,38 @@ export default class App extends React.Component {
       currentBlock: block,
       board: newBoard,
       availablePositions: newPositions,
+    }));
+  };
+
+  handleCastlingMove = (block) => {
+    const {
+      currentBlock,
+      board,
+      isWhiteNext,
+      whitePlayer,
+      blackPlayer,
+      availablePositions,
+    } = this.state;
+    // Move piece
+    let newBoard = castlingMovePiece(board, currentBlock, block);
+    // Reset available positions, also current block
+    newBoard = resetAvailablePositions(newBoard, [
+      ...availablePositions,
+      block.piece.position,
+    ]);
+    // Change pieces state after moved
+    newBoard = changePieceStateAfterMoved(
+      newBoard,
+      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
+    );
+    // Update current block to null
+    // Update isWhiteNext state
+    this.setState((prevState) => ({
+      ...prevState,
+      board: newBoard,
+      currentBlock: null,
+      availablePositions: null,
+      isWhiteNext: !prevState.isWhiteNext,
     }));
   };
 

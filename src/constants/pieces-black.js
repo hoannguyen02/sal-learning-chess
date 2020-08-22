@@ -10,8 +10,8 @@ export const BLACK_PIECES = [
   { position: [1, 6], line: 1, type: PieceType.PAWN },
   { position: [1, 7], line: 1, type: PieceType.PAWN },
   // Rook
-  { position: [0, 0], type: PieceType.ROOK },
-  { position: [0, 7], type: PieceType.ROOK },
+  { position: [0, 0], type: PieceType.ROOK, isMoved: false },
+  { position: [0, 7], type: PieceType.ROOK, isMoved: false },
   // Knight
   { position: [0, 1], type: PieceType.KNIGHT },
   { position: [0, 6], type: PieceType.KNIGHT },
@@ -21,5 +21,5 @@ export const BLACK_PIECES = [
   // Queen
   { position: [0, 3], type: PieceType.QUEEN },
   // King
-  { position: [0, 4], type: PieceType.KING },
+  { position: [0, 4], type: PieceType.KING, isMoved: false },
 ];
