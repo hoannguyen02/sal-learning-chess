@@ -1,3 +1,4 @@
+import { PieceType } from '../../constants';
 export { getPositionsForPawn };
 
 function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
@@ -27,12 +28,35 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
       }
       return [...blocks, ...catchNeighbors];
     case 5:
-      // Think more later in case just other just start move pawn or not
-      break;
+      return [
+        ...blocks,
+        ...catchNeighbors,
+        ...pawnCatchOtherPawnAtFifthLine(board, position, playerName),
+      ];
 
     default:
       return [...blocks, ...catchNeighbors];
   }
+}
+
+function pawnCatchOtherPawnAtFifthLine(board, position, playerName) {
+  const [x, y] = position;
+  const neighbors = [
+    [x, y - 1],
+    [x, y + 1],
+  ];
+  return board
+    .filter(({ piece }) => {
+      return piece
+        ? piece.playerName !== playerName &&
+            piece.type === PieceType.PAWN &&
+            piece.justMoved &&
+            neighbors.filter(
+              (n) => n[0] === piece.position[0] && n[1] === piece.position[1]
+            ).length > 0
+        : false;
+    })
+    .map((block) => block.position);
 }
 
 function pawnCatchNeighbors(board, position, isWhiteNext, playerName) {

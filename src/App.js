@@ -147,17 +147,23 @@ export default class App extends React.Component {
       availablePositions,
     } = this.state;
     // Move piece
-    let newBoard = movePiece(board, currentBlock, block);
+    const playerName = !isWhiteNext
+      ? whitePlayer.playerName
+      : blackPlayer.playerName;
+    let newBoard = movePiece(
+      board,
+      currentBlock,
+      block,
+      isWhiteNext,
+      playerName
+    );
     // Reset available positions, also current block
     newBoard = resetAvailablePositions(newBoard, [
       ...availablePositions,
       block.piece.position,
     ]);
     // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(
-      newBoard,
-      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
-    );
+    newBoard = changePieceStateAfterMoved(newBoard, playerName);
     // Update current block to null
     // Update isWhiteNext state
     this.setState((prevState) => ({

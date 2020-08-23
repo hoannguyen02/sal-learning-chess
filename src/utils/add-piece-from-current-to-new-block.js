@@ -1,4 +1,5 @@
 import { PieceType } from '../constants';
+import { findIndexInBoard } from './find-index-in-board';
 
 export { addPieceFromCurrentToNewBlock };
 
@@ -8,15 +9,19 @@ function addPieceFromCurrentToNewBlock(
   newBlock,
   isWhiteNext
 ) {
-  const index = board.findIndex(
-    (block) =>
-      block.position[0] === newBlock.position[0] &&
-      block.position[1] === newBlock.position[1]
-  );
-  board[index].piece = currentBlock.piece;
-  board[index].piece.position = newBlock.position;
+  const { piece } = currentBlock;
+  const { position: newPosition } = newBlock;
+  const index = findIndexInBoard({
+    board,
+    x: newPosition[0],
+    y: newPosition[1],
+  });
+  board[index].piece = piece;
+  board[index].piece.position = newPosition;
   if (currentBlock.piece.type === PieceType.PAWN) {
-    board[index].piece.line = isWhiteNext ? 7 - newBlock[0] : newBlock[0];
+    board[index].piece.line = isWhiteNext
+      ? 8 - newPosition[0]
+      : newPosition[0] + 1;
   }
   return board;
 }

@@ -1,14 +1,14 @@
 import { PieceType } from './piece-type';
 export const BLACK_PIECES = [
   // Pawn
-  { position: [1, 0], line: 1, type: PieceType.PAWN },
-  { position: [1, 1], line: 1, type: PieceType.PAWN },
-  { position: [1, 2], line: 1, type: PieceType.PAWN },
-  { position: [1, 3], line: 1, type: PieceType.PAWN },
-  { position: [1, 4], line: 1, type: PieceType.PAWN },
-  { position: [1, 5], line: 1, type: PieceType.PAWN },
-  { position: [1, 6], line: 1, type: PieceType.PAWN },
-  { position: [1, 7], line: 1, type: PieceType.PAWN },
+  { position: [1, 0], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 1], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 2], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 3], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 4], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 5], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 6], line: 1, justMoved: false, type: PieceType.PAWN },
+  { position: [1, 7], line: 1, justMoved: false, type: PieceType.PAWN },
   // Rook
   { position: [0, 0], type: PieceType.ROOK, isMoved: false },
   { position: [0, 7], type: PieceType.ROOK, isMoved: false },
