@@ -34,7 +34,7 @@ function castlingKingSidePositions({ block, playerName, isWhiteNext, board }) {
 }
 
 // Queen side
-function castlingQueenSidePositions({ block, playerName, board }) {
+function castlingQueenSidePositions({ block, playerName, board, isWhiteNext }) {
   const { position, piece } = block;
   const [x, y] = position;
   // Make sure it's not moved yet
@@ -56,7 +56,7 @@ function castlingQueenSidePositions({ block, playerName, board }) {
     return [];
   }
   // Make sure no check for King after moved
-  if (true) {
+  if (isKingInCheckCastling({ board, x, y: y - 2, isWhiteNext, playerName })) {
     return [];
   }
   // Make sure Rook on the right side
