@@ -1,8 +1,9 @@
 import React from 'react';
 import Block from './block';
+import Promotions from './promotions';
 import './index.scss';
 
-const SALBoard = ({ board, onClick }) => {
+const SALBoard = ({ board, onClick, promotion, onPromotionClick }) => {
   return (
     <div className="sal-board">
       <div className="sal-board-game sal-chess-clear-fix">
@@ -20,7 +21,9 @@ const SALBoard = ({ board, onClick }) => {
           />
         ))}
       </div>
-      <div className="sal-board-caption"></div>
+      {promotion.open && (
+        <Promotions piece={promotion.piece} onClick={onPromotionClick} />
+      )}
     </div>
   );
 };

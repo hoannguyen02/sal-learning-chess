@@ -23,7 +23,10 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
       const forwardTwoIndex = isWhiteNext ? position[0] - 2 : position[0] + 2;
       // Move forward 2
       const forwardTwoPosition = [forwardTwoIndex, position[1]];
-      if (isEmptyPieceBlock(board, forwardTwoPosition)) {
+      if (
+        isEmptyPieceBlock(board, forwardOnePosition) &&
+        isEmptyPieceBlock(board, forwardTwoPosition)
+      ) {
         blocks.push(forwardTwoPosition);
       }
       return [...blocks, ...catchNeighbors];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieceType } from '../../../constants';
+import { PieceType } from '../../constants';
 import BlackKing from './BlackKing';
 import WhiteKing from './WhiteKing';
 import BlackQueen from './BlackQueen';

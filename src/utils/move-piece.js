@@ -1,38 +1,48 @@
 import { PieceType } from '../constants';
 import { findIndexInBoard } from './find-index-in-board';
+import { removePieceFromBlock } from './remove-piece-from-block';
 export { movePiece };
 
-function movePiece(board, currentBlock, newBlock, isWhiteNext, playerName) {
+function movePiece(
+  board,
+  currentBlock,
+  newBlock,
+  isWhiteNext,
+  playerName,
+  isMoved
+) {
   let newBoard = [...board];
-  const { position: curPos } = currentBlock;
+  const { piece } = currentBlock;
   const { position: newPos } = newBlock;
-  // Add piece from current block for new block
+  if (!isMoved) {
+    newBoard = removePieceFromBlock(board, newBlock);
+  }
+  // Check following steps to update information for piece
+  // Update new position
+  // Update line number, justMoved state in case Pawn piece
+  // Update isMoved state incase Rook or King in order to check castling move later on
   const newIndex = findIndexInBoard({ board, x: newPos[0], y: newPos[1] });
-  newBoard[newIndex].piece = currentBlock.piece;
-  newBoard[newIndex].piece.position = newPos;
-  switch (currentBlock.piece.type) {
+  piece.position = newPos;
+  switch (piece.type) {
     case PieceType.PAWN:
       const lineNumber = isWhiteNext ? 8 - newPos[0] : newPos[0] + 1;
-      newBoard[newIndex].piece.line = lineNumber;
+      piece.line = lineNumber;
       newBoard = resetJustMovedStatus({ board, playerName });
-      if (lineNumber === 4) {
-        newBoard[newIndex].piece.justMoved = true;
-      }
+      piece.justMoved = lineNumber === 4;
       break;
     case PieceType.ROOK:
     case PieceType.KING:
-      if (!currentBlock.piece.isMoved) {
-        newBoard[newIndex].piece.isMoved = true;
+      if (!piece.isMoved) {
+        piece.isMoved = true;
       }
       break;
 
     default:
       break;
   }
-  // Remove piece from current block
-  const currentIndex = findIndexInBoard({ board, x: curPos[0], y: curPos[1] });
-  newBoard[currentIndex].piece = null;
-  return newBoard;
+  piece.index = newIndex; // Save index incase use for promotion
+  newBoard[newIndex].piece = piece;
+  return [piece, newBoard];
 }
 
 function resetJustMovedStatus({ board, playerName }) {

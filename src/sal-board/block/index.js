@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.scss';
-import PieceIcon from './icons';
+import PieceIcon from '../icons';
 
 const Block = ({ onClick, white, block }) => {
   return (

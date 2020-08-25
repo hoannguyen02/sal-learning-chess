@@ -138,15 +138,15 @@ function isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
 function isDiagonalInCheckCastling({ board, x, y, playerName, isWhiteNext }) {
   if (isWhiteNext) {
     if (y === CastlingYPosition.SIX) {
-      const [_, pawnInCheck] = isKingInCheckWithTypes({
+      const [_, nearestInCheck] = isKingInCheckWithTypes({
         board,
         x: x - 1,
         y: y + 1,
         playerName,
-        types: [PieceType.PAWN],
+        types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
       });
       return (
-        pawnInCheck || isDiagonalDownInCheck({ board, x, y, playerName }) // Right side first then left side
+        nearestInCheck || isDiagonalDownInCheck({ board, x, y, playerName }) // Right side first then left side
       );
     } else {
       return (
@@ -156,15 +156,15 @@ function isDiagonalInCheckCastling({ board, x, y, playerName, isWhiteNext }) {
     }
   } else {
     if (y === CastlingYPosition.SIX) {
-      const [_, pawnInCheck] = isKingInCheckWithTypes({
+      const [_, nearestInCheck] = isKingInCheckWithTypes({
         board,
         x: x + 1,
         y: y + 1,
         playerName,
-        types: [PieceType.PAWN],
+        types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
       });
       return (
-        pawnInCheck || // Left side
+        nearestInCheck || // Left side
         isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus: false }) // Right side
       );
     } else {
@@ -184,15 +184,15 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
   if (xMinus) {
     newX--;
     newY++;
-    // Check Pawn
-    const [_, pawnMinus] = isKingInCheckWithTypes({
+    // Check Pawn, Bishop, Queen nearest
+    const [_, inCheckMinus] = isKingInCheckWithTypes({
       board,
       x: newX,
       y: newY,
       playerName,
-      types: [PieceType.PAWN],
+      types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
     });
-    if (pawnMinus) {
+    if (inCheckMinus) {
       return true;
     }
     while (newX > 0 && newY < 7) {
@@ -214,15 +214,15 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
   } else {
     newX++;
     newY--;
-    // Check Pawn
-    const [_, pawnPlus] = isKingInCheckWithTypes({
+    // Check Pawn, Bishop, Queen nearest
+    const [_, inCheckPlus] = isKingInCheckWithTypes({
       board,
       x: newX,
       y: newY,
       playerName,
-      types: [PieceType.PAWN],
+      types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
     });
-    if (pawnPlus) {
+    if (inCheckPlus) {
       return true;
     }
     while (newX < 7 && newY > 0) {
@@ -246,15 +246,15 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
 }
 
 function isDiagonalUpInCheck({ board, x, y, playerName }) {
-  // Check Pawn
-  const [_, pawnInCheck] = isKingInCheckWithTypes({
+  // Check Pawn, Bishop, Queen nearest
+  const [_, nearestInCheck] = isKingInCheckWithTypes({
     board,
     x: x + 1,
     y: y + 1,
     playerName,
-    types: [PieceType.PAWN],
+    types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
   });
-  if (pawnInCheck) {
+  if (nearestInCheck) {
     return true;
   }
   // Check Bishop or Queen
@@ -282,15 +282,15 @@ function isDiagonalUpInCheck({ board, x, y, playerName }) {
 }
 
 function isDiagonalDownInCheck({ board, x, y, playerName }) {
-  // Check Pawn
-  const [_, pawnInCheck] = isKingInCheckWithTypes({
+  // Check Pawn, Bishop, Queen nearest
+  const [_, nearestInCheck] = isKingInCheckWithTypes({
     board,
     x: x - 1,
     y: y - 1,
     playerName,
-    types: [PieceType.PAWN],
+    types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
   });
-  if (pawnInCheck) {
+  if (nearestInCheck) {
     return true;
   }
   // Check Bishop or Queen
