@@ -3,7 +3,8 @@ import Block from './block';
 import Promotions from './promotions';
 import './index.scss';
 
-const SALBoard = ({ board, onClick, promotion, onPromotionClick }) => {
+const SALBoard = (props) => {
+  const { board, onClick, promotion, onPromotionClick, isWhiteNext } = props;
   return (
     <div className="sal-board">
       <div className="sal-board-game sal-chess-clear-fix">
@@ -22,7 +23,11 @@ const SALBoard = ({ board, onClick, promotion, onPromotionClick }) => {
         ))}
       </div>
       {promotion.open && (
-        <Promotions piece={promotion.piece} onClick={onPromotionClick} />
+        <Promotions
+          piece={promotion.piece}
+          onClick={onPromotionClick}
+          isWhiteNext={isWhiteNext}
+        />
       )}
     </div>
   );

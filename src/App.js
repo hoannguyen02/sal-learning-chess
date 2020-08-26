@@ -272,12 +272,13 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { board, promotionForPawn } = this.state;
+    const { board, promotionForPawn, isWhiteNext } = this.state;
     return (
       <>
         <SALBoard
           board={board}
           promotion={promotionForPawn}
+          isWhiteNext={isWhiteNext}
           onClick={this.handleClick}
           onPromotionClick={this.handlePromotionClick}
         />
