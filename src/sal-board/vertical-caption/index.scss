@@ -1,0 +1,10 @@
+.vertical-caption {
+  flex-direction: column;
+  right: 0;
+  width: 12.5%;
+
+  .block-base {
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
