@@ -2,7 +2,6 @@ import React from 'react';
 import SALBoard from './sal-board';
 import {
   generateBlocks,
-  initialPlayer,
   setupPiecesForPlayers,
   getAvailablePositions,
   highLightBlocks,
@@ -13,15 +12,14 @@ import {
   isCastlingMove,
   castlingMovePiece,
 } from './utils';
-import { PlayerName, PieceType } from './constants';
+import { BLACK_PIECES, WHITE_PIECES, PieceType } from './constants';
 
 export default class App extends React.Component {
   state = {
     board: generateBlocks(),
-    blackPlayer: initialPlayer(PlayerName.BLACK), // Another user or computer
-    whitePlayer: initialPlayer(PlayerName.WHITE), // User
     currentBlock: null,
     isWhiteNext: true,
+    isWhite: true,
     availablePositions: null,
     promotionForPawn: {
       open: false,
@@ -31,19 +29,17 @@ export default class App extends React.Component {
 
   componentDidMount() {
     // Setup pieces for 2 players in board
-    const { board, blackPlayer, whitePlayer, isWhiteNext } = this.state;
+    const { board, isWhite } = this.state;
     const newBoard = setupPiecesForPlayers(
       board,
-      [...blackPlayer.pieces, ...whitePlayer.pieces],
-      isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
+      [...BLACK_PIECES, ...WHITE_PIECES],
+      isWhite
     );
     this.setState((prevState) => ({
       ...prevState,
       board: newBoard,
     }));
   }
-
-  checkGameOver = () => {};
 
   handleClick = (block) => {
     const { currentBlock } = this.state;
@@ -63,7 +59,7 @@ export default class App extends React.Component {
       // Then get new available position for that block
       else if (
         block.piece &&
-        block.piece.playerName === currentBlock.piece.playerName
+        block.piece.isWhite === currentBlock.piece.isWhite
       ) {
         this.handleResetAndGetNewPositions(block);
       } else {
@@ -82,22 +78,13 @@ export default class App extends React.Component {
   };
 
   handleResetAndGetNewPositions = (block) => {
-    const {
-      board,
-      availablePositions,
-      isWhiteNext,
-      whitePlayer,
-      blackPlayer,
-    } = this.state;
+    const { board, availablePositions, isWhiteNext, isWhite } = this.state;
     let newBoard = resetAvailablePositions(board, availablePositions);
-    const playerName = isWhiteNext
-      ? whitePlayer.playerName
-      : blackPlayer.playerName;
     const newPositions = getAvailablePositions({
       block,
       board,
       isWhiteNext,
-      playerName,
+      isWhite,
     });
     newBoard = highLightBlocks(newBoard, newPositions);
     this.setState((prevState) => ({
@@ -109,14 +96,7 @@ export default class App extends React.Component {
   };
 
   handleCastlingMove = (block) => {
-    const {
-      currentBlock,
-      board,
-      isWhiteNext,
-      whitePlayer,
-      blackPlayer,
-      availablePositions,
-    } = this.state;
+    const { currentBlock, board, availablePositions, isWhite } = this.state;
     // Move piece
     let newBoard = castlingMovePiece(board, currentBlock, block);
     // Reset available positions, also current block
@@ -125,10 +105,7 @@ export default class App extends React.Component {
       block.piece.position,
     ]);
     // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(
-      newBoard,
-      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
-    );
+    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
     // Update current block to null
     // Update isWhiteNext state
     this.setState((prevState) => ({
@@ -137,6 +114,7 @@ export default class App extends React.Component {
       currentBlock: null,
       availablePositions: null,
       isWhiteNext: !prevState.isWhiteNext,
+      isWhite: !prevState.isWhite,
     }));
   };
 
@@ -145,20 +123,16 @@ export default class App extends React.Component {
       currentBlock,
       board,
       isWhiteNext,
-      whitePlayer,
-      blackPlayer,
       availablePositions,
+      isWhite,
     } = this.state;
     // Move piece
-    const playerName = !isWhiteNext
-      ? whitePlayer.playerName
-      : blackPlayer.playerName;
     let [piece, newBoard] = movePiece(
       board,
       currentBlock,
       block,
       isWhiteNext,
-      playerName,
+      !isWhiteNext,
       true
     );
     newBoard = removePieceFromBlock(board, currentBlock);
@@ -168,7 +142,7 @@ export default class App extends React.Component {
       block.piece.position,
     ]);
     // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(newBoard, playerName);
+    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
     if (piece.type === PieceType.PAWN && piece.line === 8) {
       newBoard = this.handlePromotionForPawn(newBoard, piece);
     }
@@ -180,34 +154,23 @@ export default class App extends React.Component {
       currentBlock: null,
       availablePositions: null,
       isWhiteNext: !prevState.isWhiteNext,
+      isWhite: !prevState.isWhite,
     }));
   };
 
   handleCatchPiece = (block) => {
-    const {
-      board,
-      currentBlock,
-      isWhiteNext,
-      whitePlayer,
-      blackPlayer,
-    } = this.state;
-    const playerName = !isWhiteNext
-      ? whitePlayer.playerName
-      : blackPlayer.playerName;
+    const { board, currentBlock, isWhiteNext, isWhite } = this.state;
     let [piece, newBoard] = movePiece(
       board,
       currentBlock,
       block,
       isWhiteNext,
-      playerName,
+      !isWhiteNext,
       false
     );
     newBoard = removePieceFromBlock(board, currentBlock);
     // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(
-      newBoard,
-      !isWhiteNext ? whitePlayer.playerName : blackPlayer.playerName
-    );
+    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
     if (piece.type === PieceType.PAWN && piece.line === 8) {
       newBoard = this.handlePromotionForPawn(newBoard, piece);
     }
@@ -219,6 +182,7 @@ export default class App extends React.Component {
       currentBlock: null,
       availablePositions: null,
       isWhiteNext: !prevState.isWhiteNext,
+      isWhite: !prevState.isWhite,
     }));
   };
 
@@ -248,19 +212,16 @@ export default class App extends React.Component {
   };
 
   handleGetNewPositions = (block) => {
-    const { board, isWhiteNext, whitePlayer, blackPlayer } = this.state;
+    const { board, isWhiteNext, isWhite } = this.state;
     /**
      * 1. Get available blocks to move and which ones can catch then Hight hight light those
      * 2. Set current block state in order to move or catch later on
      */
-    const playerName = isWhiteNext
-      ? whitePlayer.playerName
-      : blackPlayer.playerName;
     const availablePositions = getAvailablePositions({
       block,
       board,
       isWhiteNext,
-      playerName,
+      isWhite,
     });
     const newBoard = highLightBlocks(board, availablePositions);
     this.setState((prevState) => ({

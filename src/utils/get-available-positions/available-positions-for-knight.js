@@ -8,7 +8,7 @@ export { getPositionsForKnight };
  * Bottom: Same x + 2 => (x = x + 2, y = y - 1), (x = x + 2, y = y + 1)
  * Left:  Same y - 2 => (x = x - 1, y = y - 2), (x = x + 1, y = y - 2)
  */
-function getPositionsForKnight({ block, playerName, board }) {
+function getPositionsForKnight({ block, isWhite, board }) {
   const { position } = block;
   const x = position[0];
   const y = position[1];
@@ -22,10 +22,10 @@ function getPositionsForKnight({ block, playerName, board }) {
 
   if (allPositions.length > 0) {
     allPositions.forEach((p) => {
-      const idx = findIndexInBoard({ board, x: p[0], y: p[1] });
+      const idx = findIndexInBoard(board, p[0], p[1]);
       if (
         idx >= 0 &&
-        (!board[idx].piece || board[idx].piece.playerName !== playerName)
+        (!board[idx].piece || board[idx].piece.isWhite !== isWhite)
       ) {
         availablePositions.push([p[0], p[1]]);
       }

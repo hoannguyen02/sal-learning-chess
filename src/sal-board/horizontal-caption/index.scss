@@ -1,8 +1,9 @@
 .horizontal-caption {
-  bottom: 0;
+  bottom: -2px;
   width: 100%;
   .block-base {
     justify-content: center;
     align-items: flex-end;
+    height: 15px;
   }
 }

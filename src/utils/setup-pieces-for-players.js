@@ -2,7 +2,7 @@ import { PieceType } from '../constants';
 
 export { setupPiecesForPlayers };
 
-function setupPiecesForPlayers(board, pieces, playerName) {
+function setupPiecesForPlayers(board, pieces, isWhite) {
   const newBoard = [...board];
   pieces.forEach((piece) => {
     const idx = newBoard.findIndex(
@@ -14,7 +14,7 @@ function setupPiecesForPlayers(board, pieces, playerName) {
       newBoard[idx].piece = piece;
       if (
         (piece.type === PieceType.PAWN || piece.type === PieceType.KNIGHT) &&
-        playerName === piece.playerName
+        isWhite === piece.isWhite
       ) {
         newBoard[idx].disabled = false;
       }

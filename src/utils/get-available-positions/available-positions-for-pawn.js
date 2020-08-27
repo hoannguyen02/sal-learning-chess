@@ -1,7 +1,7 @@
 import { PieceType } from '../../constants';
 export { getPositionsForPawn };
 
-function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
+function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
   const { position, piece } = block;
   const blocks = [];
   // Move forward 1
@@ -15,7 +15,7 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
     board,
     position,
     isWhiteNext,
-    playerName
+    isWhite
   );
 
   switch (piece.line) {
@@ -34,7 +34,7 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
       return [
         ...blocks,
         ...catchNeighbors,
-        ...pawnCatchOtherPawnAtFifthLine(board, position, playerName),
+        ...pawnCatchOtherPawnAtFifthLine(board, position, isWhite),
       ];
 
     default:
@@ -42,7 +42,7 @@ function getPositionsForPawn({ block, isWhiteNext, playerName, board }) {
   }
 }
 
-function pawnCatchOtherPawnAtFifthLine(board, position, playerName) {
+function pawnCatchOtherPawnAtFifthLine(board, position, isWhite) {
   const [x, y] = position;
   const neighbors = [
     [x, y - 1],
@@ -51,7 +51,7 @@ function pawnCatchOtherPawnAtFifthLine(board, position, playerName) {
   return board
     .filter(({ piece }) => {
       return piece
-        ? piece.playerName !== playerName &&
+        ? piece.isWhite !== isWhite &&
             piece.type === PieceType.PAWN &&
             piece.justMoved &&
             neighbors.filter(
@@ -62,7 +62,7 @@ function pawnCatchOtherPawnAtFifthLine(board, position, playerName) {
     .map((block) => block.position);
 }
 
-function pawnCatchNeighbors(board, position, isWhiteNext, playerName) {
+function pawnCatchNeighbors(board, position, isWhiteNext, isWhite) {
   let neighbors = [];
   const iIndex = isWhiteNext ? position[0] - 1 : position[0] + 1;
   switch (position[1]) {
@@ -81,7 +81,7 @@ function pawnCatchNeighbors(board, position, isWhiteNext, playerName) {
   return board
     .filter((block) => {
       return block.piece
-        ? block.piece.playerName !== playerName &&
+        ? block.piece.isWhite !== isWhite &&
             neighbors.filter(
               (n) =>
                 n[0] === block.piece.position[0] &&

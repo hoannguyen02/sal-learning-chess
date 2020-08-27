@@ -8,7 +8,7 @@ function movePiece(
   currentBlock,
   newBlock,
   isWhiteNext,
-  playerName,
+  isWhite,
   isMoved
 ) {
   let newBoard = [...board];
@@ -21,13 +21,13 @@ function movePiece(
   // Update new position
   // Update line number, justMoved state in case Pawn piece
   // Update isMoved state incase Rook or King in order to check castling move later on
-  const newIndex = findIndexInBoard({ board, x: newPos[0], y: newPos[1] });
+  const newIndex = findIndexInBoard(board, newPos[0], newPos[1]);
   piece.position = newPos;
   switch (piece.type) {
     case PieceType.PAWN:
       const lineNumber = isWhiteNext ? 8 - newPos[0] : newPos[0] + 1;
       piece.line = lineNumber;
-      newBoard = resetJustMovedStatus({ board, playerName });
+      newBoard = resetJustMovedStatus({ board, isWhite });
       piece.justMoved = lineNumber === 4;
       break;
     case PieceType.ROOK:
@@ -45,13 +45,13 @@ function movePiece(
   return [piece, newBoard];
 }
 
-function resetJustMovedStatus({ board, playerName }) {
+function resetJustMovedStatus({ board, isWhite }) {
   return board.map((block) => {
     const { piece } = block;
     // Reset justMoved state to false if those are at third line
     if (
       piece &&
-      playerName === piece.playerName &&
+      isWhite === piece.isWhite &&
       piece.type === PieceType.PAWN &&
       piece.line === 4
     ) {

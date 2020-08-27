@@ -5,28 +5,23 @@ import { getPositionsForKnight } from './available-positions-for-knight';
 import { getPositionsForPawn } from './available-positions-for-pawn';
 
 // Get available blocks to move and which ones can catch then hight light those
-export function getAvailablePositions({
-  block,
-  board,
-  isWhiteNext,
-  playerName,
-}) {
+export function getAvailablePositions({ block, board, isWhiteNext, isWhite }) {
   switch (block.piece.type) {
     case PieceType.PAWN:
-      return getPositionsForPawn({ block, isWhiteNext, playerName, board });
+      return getPositionsForPawn({ block, isWhiteNext, isWhite, board });
     case PieceType.ROOK:
-      return getPositionsForRook({ block, isWhiteNext, playerName, board });
+      return getPositionsForRook({ block, isWhiteNext, isWhite, board });
     case PieceType.BISHOP:
-      return getPositionsForBishop({ block, isWhiteNext, playerName, board });
+      return getPositionsForBishop({ block, isWhiteNext, isWhite, board });
     case PieceType.QUEEN:
       return [
-        ...getPositionsForRook({ block, isWhiteNext, playerName, board }),
-        ...getPositionsForBishop({ block, isWhiteNext, playerName, board }),
+        ...getPositionsForRook({ block, isWhiteNext, isWhite, board }),
+        ...getPositionsForBishop({ block, isWhiteNext, isWhite, board }),
       ];
     case PieceType.KING:
-      return getPositionsForKing({ block, isWhiteNext, playerName, board });
+      return getPositionsForKing({ block, isWhiteNext, isWhite, board });
     case PieceType.KNIGHT:
-      return getPositionsForKnight({ block, isWhiteNext, playerName, board });
+      return getPositionsForKnight({ block, isWhiteNext, isWhite, board });
 
     default:
       return [];
@@ -37,29 +32,29 @@ function findIndexInBoard({ board, x, y }) {
   return board.findIndex((b) => b.position[0] === x && b.position[1] === y);
 }
 
-function getPositionsForRook({ block, playerName, board }) {
+function getPositionsForRook({ block, isWhite, board }) {
   const { position } = block;
   let positions = [];
   const x = position[0];
   const y = position[1];
   positions = [
     // Vertical direction
-    ...rookVerticalPositions({ x, y, playerName, board }),
+    ...rookVerticalPositions({ x, y, isWhite, board }),
     // Horizontal direction
-    ...rookHorizontalPositions({ x, y, playerName, board }),
+    ...rookHorizontalPositions({ x, y, isWhite, board }),
   ];
   return positions;
 }
 
-function rookVerticalPositions({ x, y, playerName, board }) {
+function rookVerticalPositions({ x, y, isWhite, board }) {
   let newRookX = x;
   const positions = [];
   while (newRookX > 0) {
     newRookX--;
-    const idx = findIndexInBoard({ board, x: newRookX, y });
+    const idx = findIndexInBoard(board, newRookX, y);
     if (!board[idx].piece) {
       positions.push([newRookX, y]);
-    } else if (board[idx].piece.playerName !== playerName) {
+    } else if (board[idx].piece.isWhite !== isWhite) {
       positions.push([newRookX, y]);
       newRookX = 0;
     } else {
@@ -69,10 +64,10 @@ function rookVerticalPositions({ x, y, playerName, board }) {
   let newRookX2 = x;
   while (newRookX2 < 7) {
     newRookX2++;
-    const idx = findIndexInBoard({ board, x: newRookX2, y });
+    const idx = findIndexInBoard(board, newRookX2, y);
     if (!board[idx].piece) {
       positions.push([newRookX2, y]);
-    } else if (board[idx].piece.playerName !== playerName) {
+    } else if (board[idx].piece.isWhite !== isWhite) {
       positions.push([newRookX2, y]);
       newRookX2 = 7;
     } else {
@@ -83,15 +78,15 @@ function rookVerticalPositions({ x, y, playerName, board }) {
   return positions;
 }
 
-function rookHorizontalPositions({ x, y, playerName, board }) {
+function rookHorizontalPositions({ x, y, isWhite, board }) {
   let newRookY = y;
   const positions = [];
   while (newRookY > 0) {
     newRookY--;
-    const idx = findIndexInBoard({ board, x, y: newRookY });
+    const idx = findIndexInBoard(board, x, newRookY);
     if (!board[idx].piece) {
       positions.push([x, newRookY]);
-    } else if (board[idx].piece.playerName !== playerName) {
+    } else if (board[idx].piece.isWhite !== isWhite) {
       positions.push([x, newRookY]);
       newRookY = 0;
     } else {
@@ -101,10 +96,10 @@ function rookHorizontalPositions({ x, y, playerName, board }) {
   let newRookY2 = y;
   while (newRookY2 < 7) {
     newRookY2++;
-    const idx = findIndexInBoard({ board, x, y: newRookY2 });
+    const idx = findIndexInBoard(board, x, newRookY2);
     if (!board[idx].piece) {
       positions.push([x, newRookY2]);
-    } else if (board[idx].piece.playerName !== playerName) {
+    } else if (board[idx].piece.isWhite !== isWhite) {
       positions.push([x, newRookY2]);
       newRookY2 = 7;
     } else {

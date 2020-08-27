@@ -13,7 +13,7 @@ export { getPositionsForKing };
  * B4: (x = x - 1, y = y + 1), (x = x + 1, y = y - 1)
  * Castling
  */
-function getPositionsForKing({ block, playerName, isWhiteNext, board }) {
+function getPositionsForKing({ block, isWhiteNext, isWhite, board }) {
   const { position } = block;
   const x = position[0];
   const y = position[1];
@@ -27,20 +27,20 @@ function getPositionsForKing({ block, playerName, isWhiteNext, board }) {
 
   if (allPositions.length > 0) {
     allPositions.forEach((p) => {
-      const idx = findIndexInBoard({ board, x: p[0], y: p[1] });
+      const idx = findIndexInBoard(board, p[0], p[1]);
       if (
         idx >= 0 &&
-        (!board[idx].piece || board[idx].piece.playerName !== playerName)
+        (!board[idx].piece || board[idx].piece.isWhite !== isWhite)
       ) {
         availablePositions.push([p[0], p[1]]);
       }
     });
   }
   return availablePositions.concat([
-    ...castlingKingSidePositions({ block, playerName, isWhiteNext, board }),
+    ...castlingKingSidePositions({ block, isWhite, isWhiteNext, board }),
     ...castlingQueenSidePositions({
       block,
-      playerName,
+      isWhite,
       isWhiteNext,
       board,
     }),

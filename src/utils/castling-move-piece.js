@@ -1,4 +1,5 @@
 import { CastlingYPosition } from '../constants/castling-positions';
+import { findIndexInBoard } from './find-index-in-board';
 
 export { castlingMovePiece };
 
@@ -19,8 +20,8 @@ function castlingMovePiece(board, currentBlock, newBlock) {
 }
 
 function moveRookFromCurrentToNewBlock(board, curRookPos, newRookPos) {
-  const curIndex = indexBasedOnPosition(board, curRookPos[0], curRookPos[1]);
-  const newIndex = indexBasedOnPosition(board, newRookPos[0], newRookPos[1]);
+  const curIndex = findIndexInBoard(board, curRookPos[0], curRookPos[1]);
+  const newIndex = findIndexInBoard(board, newRookPos[0], newRookPos[1]);
   board[newIndex].piece = board[curIndex].piece;
   board[newIndex].piece.position = newRookPos;
   board[newIndex].piece.isMoved = true;
@@ -45,7 +46,7 @@ function getRookPositions(position) {
 }
 
 function moveKingFromCurrentToNewBlock(board, position, piece) {
-  const index = indexBasedOnPosition(board, position[0], position[1]);
+  const index = findIndexInBoard(board, position[0], position[1]);
   board[index].piece = piece;
   board[index].piece.position = position;
   board[index].piece.isMoved = true;
@@ -53,13 +54,7 @@ function moveKingFromCurrentToNewBlock(board, position, piece) {
 }
 
 function removePieceFromBlock(board, position) {
-  const index = indexBasedOnPosition(board, position[0], position[1]);
+  const index = findIndexInBoard(board, position[0], position[1]);
   board[index].piece = null;
   return board;
-}
-
-function indexBasedOnPosition(board, x, y) {
-  return board.findIndex(
-    ({ position }) => position[0] === x && position[1] === y
-  );
 }

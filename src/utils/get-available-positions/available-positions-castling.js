@@ -5,7 +5,7 @@ import { PieceType, CastlingYPosition } from '../../constants';
 export { castlingKingSidePositions, castlingQueenSidePositions };
 
 // King side
-function castlingKingSidePositions({ block, playerName, isWhiteNext, board }) {
+function castlingKingSidePositions({ block, isWhiteNext, isWhite, board }) {
   const { position, piece } = block;
   const [x, y] = position;
   // Make sure it's not moved yet
@@ -26,7 +26,7 @@ function castlingKingSidePositions({ block, playerName, isWhiteNext, board }) {
     return [];
   }
   // Make sure no check for King after moved
-  if (isKingInCheckCastling({ board, x, y: y + 2, isWhiteNext, playerName })) {
+  if (isKingInCheckCastling({ board, x, y: y + 2, isWhiteNext, isWhite })) {
     return [];
   }
   // Make sure Rook on the right side
@@ -34,7 +34,7 @@ function castlingKingSidePositions({ block, playerName, isWhiteNext, board }) {
 }
 
 // Queen side
-function castlingQueenSidePositions({ block, playerName, board, isWhiteNext }) {
+function castlingQueenSidePositions({ block, board, isWhiteNext, isWhite }) {
   const { position, piece } = block;
   const [x, y] = position;
   // Make sure it's not moved yet
@@ -56,7 +56,7 @@ function castlingQueenSidePositions({ block, playerName, board, isWhiteNext }) {
     return [];
   }
   // Make sure no check for King after moved
-  if (isKingInCheckCastling({ board, x, y: y - 2, isWhiteNext, playerName })) {
+  if (isKingInCheckCastling({ board, x, y: y - 2, isWhiteNext, isWhite })) {
     return [];
   }
   // Make sure Rook on the right side
@@ -70,16 +70,16 @@ function castlingQueenSidePositions({ block, playerName, board, isWhiteNext }) {
  * Knight nearest
  * @param {*} param0
  */
-function isKingInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
+function isKingInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
   return (
-    isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) ||
-    isDiagonalInCheckCastling({ board, x, y, playerName, isWhiteNext }) ||
-    isKnightNearestInCheckCastling({ board, x, y, isWhiteNext, playerName })
+    isFrontInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
+    isDiagonalInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
+    isKnightNearestInCheckCastling({ board, x, y, isWhiteNext, isWhite })
   );
 }
 
-function isKingInCheckWithTypes({ board, x, y, playerName, types }) {
-  const idx = findIndexInBoard({ board, x, y });
+function isKingInCheckWithTypes({ board, x, y, isWhite, types }) {
+  const idx = findIndexInBoard(board, x, y);
   if (idx === -1) {
     return [true, false];
   }
@@ -89,14 +89,14 @@ function isKingInCheckWithTypes({ board, x, y, playerName, types }) {
     return [false, false];
   }
   // Let exit if there is a piece with same player name or other piece with type not Rook or Bishop
-  if (piece.playerName === playerName || !types.includes(piece.type)) {
+  if (piece.isWhite === isWhite || !types.includes(piece.type)) {
     return [true, false];
   }
 
   return [true, true];
 }
 
-function isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
+function isFrontInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
   let newX = x;
   let isInCheck = false;
   const types = [PieceType.QUEEN, PieceType.ROOK];
@@ -107,7 +107,7 @@ function isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
         board,
         x: newX,
         y,
-        playerName,
+        isWhite,
         types,
       });
       if (inCheck) isInCheck = true;
@@ -122,7 +122,7 @@ function isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
         board,
         x: newX,
         y,
-        playerName,
+        isWhite,
         types,
       });
       if (inCheck) isInCheck = true;
@@ -135,23 +135,23 @@ function isFrontInCheckCastling({ board, x, y, isWhiteNext, playerName }) {
   return isInCheck;
 }
 
-function isDiagonalInCheckCastling({ board, x, y, playerName, isWhiteNext }) {
+function isDiagonalInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
   if (isWhiteNext) {
     if (y === CastlingYPosition.SIX) {
       const [_, nearestInCheck] = isKingInCheckWithTypes({
         board,
         x: x - 1,
         y: y + 1,
-        playerName,
+        isWhite,
         types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
       });
       return (
-        nearestInCheck || isDiagonalDownInCheck({ board, x, y, playerName }) // Right side first then left side
+        nearestInCheck || isDiagonalDownInCheck({ board, x, y, isWhite }) // Right side first then left side
       );
     } else {
       return (
-        isDiagonalDownInCheck({ board, x, y, playerName }) || // Left side
-        isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus: true }) // Right side
+        isDiagonalDownInCheck({ board, x, y, isWhite }) || // Left side
+        isDiagonalTwoWayInCheck({ board, x, y, isWhite, xMinus: true }) // Right side
       );
     }
   } else {
@@ -160,23 +160,23 @@ function isDiagonalInCheckCastling({ board, x, y, playerName, isWhiteNext }) {
         board,
         x: x + 1,
         y: y + 1,
-        playerName,
+        isWhite,
         types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
       });
       return (
         nearestInCheck || // Left side
-        isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus: false }) // Right side
+        isDiagonalTwoWayInCheck({ board, x, y, isWhite, xMinus: false }) // Right side
       );
     } else {
       return (
-        isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus: false }) || // Right side
-        isDiagonalUpInCheck({ board, x, y, playerName }) // Left side
+        isDiagonalTwoWayInCheck({ board, x, y, isWhite, xMinus: false }) || // Right side
+        isDiagonalUpInCheck({ board, x, y, isWhite }) // Left side
       );
     }
   }
 }
 
-function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
+function isDiagonalTwoWayInCheck({ board, x, y, isWhite, xMinus }) {
   let newX = x;
   let newY = y;
   let isInCheck = false;
@@ -189,7 +189,7 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
       board,
       x: newX,
       y: newY,
-      playerName,
+      isWhite,
       types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
     });
     if (inCheckMinus) {
@@ -202,7 +202,7 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
         board,
         x: newX,
         y: newY,
-        playerName,
+        isWhite,
         types,
       });
       if (inCheck) isInCheck = true;
@@ -219,7 +219,7 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
       board,
       x: newX,
       y: newY,
-      playerName,
+      isWhite,
       types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
     });
     if (inCheckPlus) {
@@ -232,7 +232,7 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
         board,
         x: newX,
         y: newY,
-        playerName,
+        isWhite,
         types,
       });
       if (inCheck) isInCheck = true;
@@ -245,13 +245,13 @@ function isDiagonalTwoWayInCheck({ board, x, y, playerName, xMinus }) {
   return isInCheck;
 }
 
-function isDiagonalUpInCheck({ board, x, y, playerName }) {
+function isDiagonalUpInCheck({ board, x, y, isWhite }) {
   // Check Pawn, Bishop, Queen nearest
   const [_, nearestInCheck] = isKingInCheckWithTypes({
     board,
     x: x + 1,
     y: y + 1,
-    playerName,
+    isWhite,
     types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
   });
   if (nearestInCheck) {
@@ -269,7 +269,7 @@ function isDiagonalUpInCheck({ board, x, y, playerName }) {
       board,
       x: newX,
       y: newY,
-      playerName,
+      isWhite,
       types,
     });
     if (inCheck) isInCheck = true;
@@ -281,13 +281,13 @@ function isDiagonalUpInCheck({ board, x, y, playerName }) {
   return isInCheck;
 }
 
-function isDiagonalDownInCheck({ board, x, y, playerName }) {
+function isDiagonalDownInCheck({ board, x, y, isWhite }) {
   // Check Pawn, Bishop, Queen nearest
   const [_, nearestInCheck] = isKingInCheckWithTypes({
     board,
     x: x - 1,
     y: y - 1,
-    playerName,
+    isWhite,
     types: [PieceType.PAWN, PieceType.QUEEN, PieceType.BISHOP],
   });
   if (nearestInCheck) {
@@ -305,7 +305,7 @@ function isDiagonalDownInCheck({ board, x, y, playerName }) {
       board,
       x: newX,
       y: newY,
-      playerName,
+      isWhite,
       types,
     });
     if (inCheck) isInCheck = true;
@@ -317,18 +317,12 @@ function isDiagonalDownInCheck({ board, x, y, playerName }) {
   return isInCheck;
 }
 
-function isKnightNearestInCheckCastling({
-  board,
-  x,
-  y,
-  isWhiteNext,
-  playerName,
-}) {
-  const isKingInCheckByKnight = ({ board, positions, playerName }) => {
+function isKnightNearestInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
+  const isKingInCheckByKnight = ({ board, positions, isWhite }) => {
     return (
       board.filter(({ piece }) => {
         return piece
-          ? piece.playerName !== playerName &&
+          ? piece.isWhite !== isWhite &&
               piece.type === PieceType.KNIGHT &&
               positions.filter(
                 ([x, y]) => x === piece.position[0] && y === piece.position[1]
@@ -350,11 +344,11 @@ function isKnightNearestInCheckCastling({
         [x + 1, y - 2],
       ];
 
-  return isKingInCheckByKnight({ board, positions, playerName });
+  return isKingInCheckByKnight({ board, positions, isWhite });
 }
 
 function isRookValidForCastling({ board, x, y }) {
-  const idx = findIndexInBoard({ board, x, y });
+  const idx = findIndexInBoard(board, x, y);
   if (
     idx >= 0 &&
     board[idx].piece &&

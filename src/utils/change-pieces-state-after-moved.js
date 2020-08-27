@@ -1,7 +1,7 @@
 export { changePieceStateAfterMoved };
-function changePieceStateAfterMoved(board, playerName) {
+function changePieceStateAfterMoved(board, isWhite) {
   return board.map((block) => {
-    const enabled = block.piece ? playerName === block.piece.playerName : false;
+    const enabled = block.piece ? isWhite === block.piece.isWhite : false;
     return {
       ...block,
       disabled: !enabled,
