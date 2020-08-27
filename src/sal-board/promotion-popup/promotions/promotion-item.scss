@@ -1,6 +1,6 @@
 .sal-promotion-item {
   width: 100%;
-  padding-bottom: 12.5%;
+  height: 47px;
   background-color: #efdec3;
   border: 0;
   outline: 0;
@@ -15,5 +15,15 @@
     right: 0;
     bottom: 0;
     margin: auto;
+  }
+  &.white {
+    background-color: #946136;
+  }
+  @media (min-width: 768px) {
+    height: 96px;
+  }
+
+  @media (min-width: 1024px) {
+    height: 100px;
   }
 }

@@ -1,0 +1,16 @@
+.sal-promotions {
+  position: absolute;
+  top: 0;
+  width: 12.5%;
+  // box-shadow: 0 0 3px 3px rgba(50, 50, 50, 0.2);
+  visibility: hidden;
+  transition: all 0.3s ease-out;
+  transform: translate(0, -50px);
+  opacity: 0;
+  z-index: 1051;
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}

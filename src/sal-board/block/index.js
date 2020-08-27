@@ -2,10 +2,10 @@ import React from 'react';
 import './index.scss';
 import PieceIcon from '../icons';
 
-const Block = ({ onClick, white, block }) => {
+const Block = ({ onClick, whiteClass, block }) => {
   return (
     <button
-      className={`sal-chess-block ${white ? 'white' : ''} ${
+      className={`sal-chess-block ${whiteClass} ${
         block.highLight ? 'high-light' : ''
       } ${block.catchHighLight ? 'catch-high-light' : ''}`}
       onClick={() => onClick(block)}

@@ -1,12 +1,12 @@
 import React from 'react';
 import './promotion-item.scss';
-import PieceIcon from '../icons';
+import PieceIcon from '../../icons';
 
 // Actually promotion is piece with type is not King or Pawn
-const PromotionItem = ({ onClick, promotion, style }) => {
+const PromotionItem = ({ onClick, promotion, style, whiteClass }) => {
   return (
     <button
-      className={`sal-promotion-item`}
+      className={`sal-promotion-item ${promotion.isWhite ? 'white' : ''}`}
       onClick={() => onClick(promotion.type)}
       style={style}
     >

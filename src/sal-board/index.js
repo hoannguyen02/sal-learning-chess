@@ -1,7 +1,7 @@
 import React from 'react';
 import Block from './block';
-import Promotions from './promotions';
 import './index.scss';
+import PromotionPopup from './promotion-popup';
 
 const SALBoard = (props) => {
   const { board, onClick, promotion, onPromotionClick, isWhiteNext } = props;
@@ -12,7 +12,7 @@ const SALBoard = (props) => {
           <Block
             block={block}
             onClick={onClick}
-            white={
+            whiteClass={
               (block.position[0] % 2 === 0 && block.position[1] % 2 !== 0) ||
               (block.position[0] % 2 !== 0 && block.position[1] % 2 === 0)
                 ? 'white'
@@ -23,8 +23,9 @@ const SALBoard = (props) => {
         ))}
       </div>
       {promotion.open && (
-        <Promotions
+        <PromotionPopup
           piece={promotion.piece}
+          open={promotion.open}
           onClick={onPromotionClick}
           isWhiteNext={isWhiteNext}
         />

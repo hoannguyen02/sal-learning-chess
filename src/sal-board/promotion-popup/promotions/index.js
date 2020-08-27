@@ -1,37 +1,41 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { PieceType } from '../../constants';
+import React, { useState, useEffect } from 'react';
+import { PieceType } from '../../../constants';
 import PromotionItem from './PromotionItem';
 import './index.scss';
 
-const Promotions = ({ onClick, piece, isWhiteNext }) => {
+const Promotions = ({ onClick, piece, isWhiteNext, open }) => {
   const { position } = piece;
-  const ref = useRef(null);
-  const [width, setWidth] = useState(0);
   const [promotionStyles, setPromotionStyles] = useState({});
 
+  let isWhite =
+    (position[0] % 2 === 0 && position[1] % 2 !== 0) ||
+    (position[0] % 2 !== 0 && position[1] % 2 === 0);
+
   useEffect(() => {
-    ref && ref.current && setWidth(ref.current.clientWidth);
     !isWhiteNext
       ? setPromotionStyles({ top: 0, bottom: 'auto' })
       : setPromotionStyles({ bottom: 0, top: 'auto' });
-  }, [ref, isWhiteNext]);
+  }, [isWhiteNext]);
 
   return (
     <div
-      className="sal-promotions sal-chess-clear-fix"
+      className={`sal-promotions sal-chess-clear-fix ${open ? 'open' : ''}`}
       style={{ left: `${position[1] * 12.5}%`, ...promotionStyles }}
-      ref={ref}
     >
       {[PieceType.QUEEN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK]
-        .map((type) => ({
-          ...piece,
-          type,
-        }))
+        .map((type) => {
+          const newPiece = {
+            ...piece,
+            type,
+            isWhite: isWhite,
+          };
+          isWhite = !isWhite;
+          return newPiece;
+        })
         .map((promotion, index) => (
           <PromotionItem
             onClick={onClick}
             promotion={promotion}
-            style={{ height: width }}
             key={`sal-promotion-${index}`}
           />
         ))}
