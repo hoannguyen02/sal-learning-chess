@@ -2,14 +2,14 @@ import React from 'react';
 import Board from '../board';
 import {
   setupBoard,
-  getAvailablePositions,
-  highLightBlocks,
   resetAvailablePositions,
   movePiece,
   changePieceStateAfterMoved,
   removePieceFromBlock,
   isCastlingMove,
   castlingMovePiece,
+  handleGetNewPositions,
+  handleResetAndGetNewPositions,
 } from '../..//utils';
 
 import { PieceType } from '../../constants';
@@ -42,7 +42,16 @@ export default class App extends React.Component {
     const { currentBlock } = this.state;
 
     if (!currentBlock) {
-      this.handleGetNewPositions(block);
+      /**
+       * 1. Get available blocks to move and which ones can catch then Hight hight light those
+       * 2. Set current block state in order to move or catch later on
+       */
+      const newState = handleGetNewPositions({ ...this.state, block });
+      this.setState((prevState) => ({
+        ...prevState,
+        ...newState,
+        currentBlock: block,
+      }));
     } else {
       // Incase user click again in that block
       if (
@@ -58,7 +67,15 @@ export default class App extends React.Component {
         block.piece &&
         block.piece.isWhite === currentBlock.piece.isWhite
       ) {
-        this.handleResetAndGetNewPositions(block);
+        const newState = handleResetAndGetNewPositions({
+          ...this.state,
+          block,
+        });
+        this.setState((prevState) => ({
+          ...prevState,
+          ...newState,
+          currentBlock: block,
+        }));
       } else {
         // Move if there is no piece in block, otherwise catch
         if (!block.piece) {
@@ -72,24 +89,6 @@ export default class App extends React.Component {
         }
       }
     }
-  };
-
-  handleResetAndGetNewPositions = (block) => {
-    const { board, availablePositions, isWhiteNext, isWhite } = this.state;
-    let newBoard = resetAvailablePositions(board, availablePositions);
-    const newPositions = getAvailablePositions({
-      block,
-      board,
-      isWhiteNext,
-      isWhite,
-    });
-    newBoard = highLightBlocks(newBoard, newPositions);
-    this.setState((prevState) => ({
-      ...prevState,
-      currentBlock: block,
-      board: newBoard,
-      availablePositions: newPositions,
-    }));
   };
 
   handleCastlingMove = (block) => {
@@ -205,27 +204,6 @@ export default class App extends React.Component {
         piece: null,
         open: false,
       },
-    }));
-  };
-
-  handleGetNewPositions = (block) => {
-    const { board, isWhiteNext, isWhite } = this.state;
-    /**
-     * 1. Get available blocks to move and which ones can catch then Hight hight light those
-     * 2. Set current block state in order to move or catch later on
-     */
-    const availablePositions = getAvailablePositions({
-      block,
-      board,
-      isWhiteNext,
-      isWhite,
-    });
-    const newBoard = highLightBlocks(board, availablePositions);
-    this.setState((prevState) => ({
-      ...prevState,
-      currentBlock: block,
-      board: newBoard,
-      availablePositions,
     }));
   };
 

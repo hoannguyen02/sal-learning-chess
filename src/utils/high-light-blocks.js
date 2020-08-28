@@ -1,8 +1,9 @@
 export { highLightBlocks };
 // Hight light blocks that user can move
-function highLightBlocks(board, positions) {
+function highLightBlocks(state) {
+  const { board, availablePositions } = state;
   const newBoard = [...board];
-  positions.forEach((position) => {
+  availablePositions.forEach((position) => {
     const idx = newBoard.findIndex(
       (block) =>
         block.position[0] === position[0] && block.position[1] === position[1]
@@ -13,5 +14,8 @@ function highLightBlocks(board, positions) {
       newBoard[idx].disabled = false;
     }
   });
-  return newBoard;
+  return {
+    ...state,
+    board: newBoard,
+  };
 }

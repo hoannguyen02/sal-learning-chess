@@ -7,3 +7,5 @@ export * from './change-pieces-state-after-moved';
 export * from './remove-piece-from-block';
 export * from './is-castling-move';
 export * from './castling-move-piece';
+export * from './handle-get-new-positions';
+export * from './handle-reset-and-get-new-positions';

@@ -5,27 +5,66 @@ import { getPositionsForKnight } from './available-positions-for-knight';
 import { getPositionsForPawn } from './available-positions-for-pawn';
 
 // Get available blocks to move and which ones can catch then hight light those
-export function getAvailablePositions({ block, board, isWhiteNext, isWhite }) {
+export function getAvailablePositions(state) {
+  const { block, board, isWhiteNext, isWhite } = state;
+  let availablePositions = [];
   switch (block.piece.type) {
     case PieceType.PAWN:
-      return getPositionsForPawn({ block, isWhiteNext, isWhite, board });
+      availablePositions = getPositionsForPawn({
+        block,
+        isWhiteNext,
+        isWhite,
+        board,
+      });
+      break;
     case PieceType.ROOK:
-      return getPositionsForRook({ block, isWhiteNext, isWhite, board });
+      availablePositions = getPositionsForRook({
+        block,
+        isWhiteNext,
+        isWhite,
+        board,
+      });
+      break;
     case PieceType.BISHOP:
-      return getPositionsForBishop({ block, isWhiteNext, isWhite, board });
+      availablePositions = getPositionsForBishop({
+        block,
+        isWhiteNext,
+        isWhite,
+        board,
+      });
+      break;
     case PieceType.QUEEN:
-      return [
+      availablePositions = [
         ...getPositionsForRook({ block, isWhiteNext, isWhite, board }),
         ...getPositionsForBishop({ block, isWhiteNext, isWhite, board }),
       ];
+      break;
     case PieceType.KING:
-      return getPositionsForKing({ block, isWhiteNext, isWhite, board });
+      availablePositions = getPositionsForKing({
+        block,
+        isWhiteNext,
+        isWhite,
+        board,
+      });
+      break;
     case PieceType.KNIGHT:
-      return getPositionsForKnight({ block, isWhiteNext, isWhite, board });
+      availablePositions = getPositionsForKnight({
+        block,
+        isWhiteNext,
+        isWhite,
+        board,
+      });
+      break;
 
     default:
-      return [];
+      availablePositions = [];
+      break;
   }
+
+  return {
+    ...state,
+    availablePositions,
+  };
 }
 
 function findIndexInBoard({ board, x, y }) {
