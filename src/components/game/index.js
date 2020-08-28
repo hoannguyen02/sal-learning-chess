@@ -2,7 +2,7 @@ import React from 'react';
 import Board from '../board';
 import {
   generateBlocks,
-  setupPiecesForPlayers,
+  setupBoard,
   getAvailablePositions,
   highLightBlocks,
   resetAvailablePositions,
@@ -32,7 +32,7 @@ export default class App extends React.Component {
     const { whitePieces, blackPieces } = this.props;
     // Setup pieces for 2 players in board
     const { board, isWhite } = this.state;
-    const newBoard = setupPiecesForPlayers(
+    const newBoard = setupBoard(
       board,
       [...blackPieces, ...whitePieces],
       isWhite

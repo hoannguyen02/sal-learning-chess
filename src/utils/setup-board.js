@@ -1,8 +1,8 @@
 import { PieceType } from '../constants';
 
-export { setupPiecesForPlayers };
+export { setupBoard };
 
-function setupPiecesForPlayers(board, pieces, isWhite) {
+function setupBoard(board, pieces, isWhite) {
   const newBoard = [...board];
   pieces.forEach((piece) => {
     const idx = newBoard.findIndex(
