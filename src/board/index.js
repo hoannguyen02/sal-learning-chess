@@ -5,11 +5,11 @@ import PromotionPopup from './promotion-popup';
 import VerticalCaption from './vertical-caption';
 import HorizontalCaption from './horizontal-caption';
 
-const SALBoard = (props) => {
+const Board = (props) => {
   const { board, onClick, promotion, onPromotionClick, isWhiteNext } = props;
   return (
-    <div className="sal-board">
-      <div className="sal-board-game sal-chess-clear-fix">
+    <div className="board">
+      <div className="clear-fix">
         <VerticalCaption />
         <HorizontalCaption />
         {board.map((block, index) => (
@@ -22,7 +22,7 @@ const SALBoard = (props) => {
                 ? 'white'
                 : ''
             }
-            key={`sal-chess-block-${index}`}
+            key={`chess-block-${index}`}
           />
         ))}
       </div>
@@ -38,4 +38,4 @@ const SALBoard = (props) => {
   );
 };
 
-export default SALBoard;
+export default Board;

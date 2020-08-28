@@ -5,7 +5,7 @@ import PieceIcon from '../icons';
 const Block = ({ onClick, whiteClass, block }) => {
   return (
     <button
-      className={`sal-chess-block block-base ${whiteClass} ${
+      className={`chess-block block-base ${whiteClass} ${
         block.highLight ? 'high-light' : ''
       } ${block.catchHighLight ? 'catch-high-light' : ''}`}
       onClick={() => onClick(block)}

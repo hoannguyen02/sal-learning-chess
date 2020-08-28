@@ -6,7 +6,7 @@ import PieceIcon from '../../icons';
 const PromotionItem = ({ onClick, promotion, style, whiteClass }) => {
   return (
     <button
-      className={`sal-promotion-item block-base ${
+      className={`chess-promotion-item block-base ${
         promotion.isWhite ? 'white' : ''
       }`}
       onClick={() => onClick(promotion.type)}

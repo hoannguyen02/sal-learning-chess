@@ -1,5 +1,5 @@
 import React from 'react';
-import SALBoard from './sal-board';
+import Board from './board';
 import {
   generateBlocks,
   setupPiecesForPlayers,
@@ -236,7 +236,7 @@ export default class App extends React.Component {
     const { board, promotionForPawn, isWhiteNext } = this.state;
     return (
       <>
-        <SALBoard
+        <Board
           board={board}
           promotion={promotionForPawn}
           isWhiteNext={isWhiteNext}

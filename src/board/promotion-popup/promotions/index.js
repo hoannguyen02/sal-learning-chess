@@ -19,7 +19,7 @@ const Promotions = ({ onClick, piece, isWhiteNext, open }) => {
 
   return (
     <div
-      className={`sal-promotions sal-chess-clear-fix ${open ? 'open' : ''}`}
+      className={`chess-promotions clear-fix ${open ? 'open' : ''}`}
       style={{ left: `${position[1] * 12.5}%`, ...promotionStyles }}
     >
       {[PieceType.QUEEN, PieceType.KNIGHT, PieceType.BISHOP, PieceType.ROOK]
@@ -36,7 +36,7 @@ const Promotions = ({ onClick, piece, isWhiteNext, open }) => {
           <PromotionItem
             onClick={onClick}
             promotion={promotion}
-            key={`sal-promotion-${index}`}
+            key={`chess-promotion-${index}`}
           />
         ))}
     </div>
