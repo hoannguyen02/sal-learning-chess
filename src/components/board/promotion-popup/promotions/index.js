@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PieceType } from '../../../constants';
+import { PieceType } from '../../../../constants';
 import PromotionItem from './PromotionItem';
 import './index.scss';
 

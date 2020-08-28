@@ -1,5 +1,5 @@
 import React from 'react';
-import Backdrop from '../../components';
+import { Backdrop } from '../../../components';
 import Promotions from './promotions';
 
 const PromotionPopup = (props) => {

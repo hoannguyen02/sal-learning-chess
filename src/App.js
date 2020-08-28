@@ -1,5 +1,5 @@
 import React from 'react';
-import Board from './board';
+import { Board } from './components';
 import {
   generateBlocks,
   setupPiecesForPlayers,
