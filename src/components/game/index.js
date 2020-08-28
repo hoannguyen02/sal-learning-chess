@@ -12,7 +12,8 @@ import {
   isCastlingMove,
   castlingMovePiece,
 } from '../..//utils';
-import { BLACK_PIECES, WHITE_PIECES, PieceType } from '../../constants';
+
+import { PieceType } from '../../constants';
 
 export default class App extends React.Component {
   state = {
@@ -28,11 +29,12 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+    const { whitePieces, blackPieces } = this.props;
     // Setup pieces for 2 players in board
     const { board, isWhite } = this.state;
     const newBoard = setupPiecesForPlayers(
       board,
-      [...BLACK_PIECES, ...WHITE_PIECES],
+      [...blackPieces, ...whitePieces],
       isWhite
     );
     this.setState((prevState) => ({
