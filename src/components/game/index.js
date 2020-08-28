@@ -1,7 +1,6 @@
 import React from 'react';
 import Board from '../board';
 import {
-  generateBlocks,
   setupBoard,
   getAvailablePositions,
   highLightBlocks,
@@ -17,7 +16,7 @@ import { PieceType } from '../../constants';
 
 export default class App extends React.Component {
   state = {
-    board: generateBlocks(),
+    board: null,
     currentBlock: null,
     isWhiteNext: true,
     isWhite: true,
@@ -31,12 +30,8 @@ export default class App extends React.Component {
   componentDidMount() {
     const { whitePieces, blackPieces } = this.props;
     // Setup pieces for 2 players in board
-    const { board, isWhite } = this.state;
-    const newBoard = setupBoard(
-      board,
-      [...blackPieces, ...whitePieces],
-      isWhite
-    );
+    const { isWhite } = this.state;
+    const newBoard = setupBoard(blackPieces, whitePieces, isWhite);
     this.setState((prevState) => ({
       ...prevState,
       board: newBoard,
@@ -237,15 +232,13 @@ export default class App extends React.Component {
   render() {
     const { board, promotionForPawn, isWhiteNext } = this.state;
     return (
-      <>
-        <Board
-          board={board}
-          promotion={promotionForPawn}
-          isWhiteNext={isWhiteNext}
-          onClick={this.handleClick}
-          onPromotionClick={this.handlePromotionClick}
-        />
-      </>
+      <Board
+        board={board}
+        promotion={promotionForPawn}
+        isWhiteNext={isWhiteNext}
+        onClick={this.handleClick}
+        onPromotionClick={this.handlePromotionClick}
+      />
     );
   }
 }

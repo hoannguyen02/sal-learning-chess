@@ -7,7 +7,7 @@ import HorizontalCaption from './horizontal-caption';
 
 const Board = (props) => {
   const { board, onClick, promotion, onPromotionClick, isWhiteNext } = props;
-  return (
+  return board && Array.isArray(board) && board.length > 0 ? (
     <div className="board">
       <div className="clear-fix">
         <VerticalCaption />
@@ -35,6 +35,8 @@ const Board = (props) => {
         />
       )}
     </div>
+  ) : (
+    ''
   );
 };
 
