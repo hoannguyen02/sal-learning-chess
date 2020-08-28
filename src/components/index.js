@@ -1,2 +1,2 @@
 export { default as Backdrop } from './backdrop';
-export { default as Board } from './board';
+export { default as Game } from './game';
