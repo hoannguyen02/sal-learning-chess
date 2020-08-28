@@ -9,3 +9,6 @@ export * from './is-castling-move';
 export * from './castling-move-piece';
 export * from './handle-get-new-positions';
 export * from './handle-reset-and-get-new-positions';
+export * from './handle-castling-move';
+export * from './handle-normal-move';
+export * from './handle-catch-other';

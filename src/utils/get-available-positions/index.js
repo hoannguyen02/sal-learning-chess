@@ -3,6 +3,7 @@ import { getPositionsForBishop } from './available-positions-for-bishop';
 import { getPositionsForKing } from './available-positions-for-king';
 import { getPositionsForKnight } from './available-positions-for-knight';
 import { getPositionsForPawn } from './available-positions-for-pawn';
+import { findIndexInBoard } from '../find-index-in-board';
 
 // Get available blocks to move and which ones can catch then hight light those
 export function getAvailablePositions(state) {
@@ -65,10 +66,6 @@ export function getAvailablePositions(state) {
     ...state,
     availablePositions,
   };
-}
-
-function findIndexInBoard({ board, x, y }) {
-  return board.findIndex((b) => b.position[0] === x && b.position[1] === y);
 }
 
 function getPositionsForRook({ block, isWhite, board }) {

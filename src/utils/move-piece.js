@@ -1,22 +1,12 @@
 import { PieceType } from '../constants';
 import { findIndexInBoard } from './find-index-in-board';
-import { removePieceFromBlock } from './remove-piece-from-block';
 export { movePiece };
 
-function movePiece(
-  board,
-  currentBlock,
-  newBlock,
-  isWhiteNext,
-  isWhite,
-  isMoved
-) {
+function movePiece(state) {
+  const { board, currentBlock, block: newBlock, isWhiteNext, isWhite } = state;
   let newBoard = [...board];
   const { piece } = currentBlock;
   const { position: newPos } = newBlock;
-  if (!isMoved) {
-    newBoard = removePieceFromBlock(board, newBlock);
-  }
   // Check following steps to update information for piece
   // Update new position
   // Update line number, justMoved state in case Pawn piece
@@ -27,7 +17,7 @@ function movePiece(
     case PieceType.PAWN:
       const lineNumber = isWhiteNext ? 8 - newPos[0] : newPos[0] + 1;
       piece.line = lineNumber;
-      newBoard = resetJustMovedStatus({ board, isWhite });
+      newBoard = resetJustMovedStatus({ board, isWhite: !isWhite });
       piece.justMoved = lineNumber === 4;
       break;
     case PieceType.ROOK:
@@ -42,7 +32,11 @@ function movePiece(
   }
   piece.index = newIndex; // Save index incase use for promotion
   newBoard[newIndex].piece = piece;
-  return [piece, newBoard];
+  return {
+    ...state,
+    piece,
+    board: newBoard,
+  };
 }
 
 function resetJustMovedStatus({ board, isWhite }) {

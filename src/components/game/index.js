@@ -2,17 +2,13 @@ import React from 'react';
 import Board from '../board';
 import {
   setupBoard,
-  resetAvailablePositions,
-  movePiece,
-  changePieceStateAfterMoved,
-  removePieceFromBlock,
+  handleCatchOther,
   isCastlingMove,
-  castlingMovePiece,
+  handleNormalMove,
   handleGetNewPositions,
   handleResetAndGetNewPositions,
+  handleCastlingMove,
 } from '../..//utils';
-
-import { PieceType } from '../../constants';
 
 export default class App extends React.Component {
   state = {
@@ -52,6 +48,7 @@ export default class App extends React.Component {
         ...newState,
         currentBlock: block,
       }));
+      return;
     } else {
       // Incase user click again in that block
       if (
@@ -63,10 +60,7 @@ export default class App extends React.Component {
       // Incase user click another blocks, meaning that not move or catch
       // We need to reset previous available positions and reset highlight
       // Then get new available position for that block
-      else if (
-        block.piece &&
-        block.piece.isWhite === currentBlock.piece.isWhite
-      ) {
+      if (block.piece && block.piece.isWhite === currentBlock.piece.isWhite) {
         const newState = handleResetAndGetNewPositions({
           ...this.state,
           block,
@@ -80,106 +74,50 @@ export default class App extends React.Component {
         // Move if there is no piece in block, otherwise catch
         if (!block.piece) {
           if (isCastlingMove(currentBlock, block)) {
-            this.handleCastlingMove(block);
+            const newState = handleCastlingMove({
+              ...this.state,
+              block,
+              availablePositions: [
+                ...this.state.availablePositions,
+                currentBlock.piece.position,
+              ],
+            });
+            this.setState((prevState) => ({
+              ...prevState,
+              ...newState,
+              currentBlock: null,
+              availablePositions: null,
+              isWhiteNext: !prevState.isWhiteNext,
+              isWhite: !prevState.isWhite,
+            }));
           } else {
-            this.handleMovePiece(block);
+            const newState = handleNormalMove({ ...this.state, block });
+            this.setState((prevState) => ({
+              ...prevState,
+              ...newState,
+              currentBlock: null,
+              availablePositions: null,
+              isWhiteNext: !prevState.isWhiteNext,
+              isWhite: !prevState.isWhite,
+            }));
           }
         } else {
-          this.handleCatchPiece(block);
+          const newState = handleCatchOther({
+            ...this.state,
+            block,
+            isMoved: false,
+          });
+          this.setState((prevState) => ({
+            ...prevState,
+            ...newState,
+            currentBlock: null,
+            availablePositions: null,
+            isWhiteNext: !prevState.isWhiteNext,
+            isWhite: !prevState.isWhite,
+          }));
         }
       }
     }
-  };
-
-  handleCastlingMove = (block) => {
-    const { currentBlock, board, availablePositions, isWhite } = this.state;
-    // Move piece
-    let newBoard = castlingMovePiece(board, currentBlock, block);
-    // Reset available positions, also current block
-    newBoard = resetAvailablePositions(newBoard, [
-      ...availablePositions,
-      block.piece.position,
-    ]);
-    // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
-    // Update current block to null
-    // Update isWhiteNext state
-    this.setState((prevState) => ({
-      ...prevState,
-      board: newBoard,
-      currentBlock: null,
-      availablePositions: null,
-      isWhiteNext: !prevState.isWhiteNext,
-      isWhite: !prevState.isWhite,
-    }));
-  };
-
-  handleMovePiece = (block) => {
-    const {
-      currentBlock,
-      board,
-      isWhiteNext,
-      availablePositions,
-      isWhite,
-    } = this.state;
-    // Move piece
-    let [piece, newBoard] = movePiece(
-      board,
-      currentBlock,
-      block,
-      isWhiteNext,
-      !isWhiteNext,
-      true
-    );
-    newBoard = removePieceFromBlock(board, currentBlock);
-    // Reset available positions, also current block
-    newBoard = resetAvailablePositions(newBoard, [
-      ...availablePositions,
-      block.piece.position,
-    ]);
-    // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
-    if (piece.type === PieceType.PAWN && piece.line === 8) {
-      newBoard = this.handlePromotionForPawn(newBoard, piece);
-    }
-    // Update current block to null
-    // Update isWhiteNext state
-    this.setState((prevState) => ({
-      ...prevState,
-      board: newBoard,
-      currentBlock: null,
-      availablePositions: null,
-      isWhiteNext: !prevState.isWhiteNext,
-      isWhite: !prevState.isWhite,
-    }));
-  };
-
-  handleCatchPiece = (block) => {
-    const { board, currentBlock, isWhiteNext, isWhite } = this.state;
-    let [piece, newBoard] = movePiece(
-      board,
-      currentBlock,
-      block,
-      isWhiteNext,
-      !isWhiteNext,
-      false
-    );
-    newBoard = removePieceFromBlock(board, currentBlock);
-    // Change pieces state after moved
-    newBoard = changePieceStateAfterMoved(newBoard, !isWhite);
-    if (piece.type === PieceType.PAWN && piece.line === 8) {
-      newBoard = this.handlePromotionForPawn(newBoard, piece);
-    }
-    // Update current block to null
-    // Update isWhiteNext state
-    this.setState((prevState) => ({
-      ...prevState,
-      board: newBoard,
-      currentBlock: null,
-      availablePositions: null,
-      isWhiteNext: !prevState.isWhiteNext,
-      isWhite: !prevState.isWhite,
-    }));
   };
 
   handlePromotionForPawn = (board, piece) => {

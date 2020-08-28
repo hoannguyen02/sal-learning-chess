@@ -3,20 +3,24 @@ import { findIndexInBoard } from './find-index-in-board';
 
 export { castlingMovePiece };
 
-function castlingMovePiece(board, currentBlock, newBlock) {
+function castlingMovePiece(state) {
+  const { board, currentBlock, block: newBlock } = state;
   let newBoard = [...board];
   const { position: currentKingPos, piece } = currentBlock;
   const { position: newKingPos } = newBlock;
   // Move king from current to new block
   newBoard = moveKingFromCurrentToNewBlock(newBoard, newKingPos, piece);
   // Remove king from current block
-  newBoard = removePieceFromBlock(newBoard, currentKingPos);
+  newBoard = removePieceFromCurrentBlock(newBoard, currentKingPos);
   // Move rook from current to new block
   // Remove rook from current block
   const [curRookPos, newRookPos] = getRookPositions(newKingPos);
   newBoard = moveRookFromCurrentToNewBlock(newBoard, curRookPos, newRookPos);
 
-  return newBoard;
+  return {
+    ...state,
+    board: newBoard,
+  };
 }
 
 function moveRookFromCurrentToNewBlock(board, curRookPos, newRookPos) {
@@ -53,7 +57,7 @@ function moveKingFromCurrentToNewBlock(board, position, piece) {
   return board;
 }
 
-function removePieceFromBlock(board, position) {
+function removePieceFromCurrentBlock(board, position) {
   const index = findIndexInBoard(board, position[0], position[1]);
   board[index].piece = null;
   return board;
