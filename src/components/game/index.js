@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Board from '../board';
 import {
   setupBoard,
-  handleCatchOther,
+  handleCapture,
   isCastlingMove,
   handleNormalMove,
   handleGetNewPositions,
@@ -126,7 +126,7 @@ const Game = (props) => {
             }));
           }
         } else {
-          const newState = handleCatchOther({
+          const newState = handleCapture({
             ...state,
             block,
             isMoved: false,

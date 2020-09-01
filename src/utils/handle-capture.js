@@ -14,8 +14,8 @@ import { updatePromotionForPawn } from './update-promotion-for-pawn';
  * Update promotion for pawn
  * @param {*} state
  */
-const handleCatchOther = (state) =>
-  catchPiece(
+const handleCapture = (state) =>
+  capture(
     updatePromotionForPawn,
     changePieceStateAfterMoved,
     removePieceFromCurrentBlock,
@@ -23,8 +23,8 @@ const handleCatchOther = (state) =>
     removePieceFromNextBlock
   )(state);
 
-export { handleCatchOther };
+export { handleCapture };
 
-function catchPiece(...fns) {
+function capture(...fns) {
   return fns.reduce(compose);
 }
