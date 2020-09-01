@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import Board from '../board';
 import {
   setupBoard,
@@ -8,10 +9,13 @@ import {
   handleGetNewPositions,
   handleResetAndGetNewPositions,
   handleCastlingMove,
-} from '../..//utils';
+  highLightBlocksWithType,
+} from '../../utils';
 
-export default class App extends React.Component {
-  state = {
+const Game = (props) => {
+  const { whitePieces, blackPieces, disabledPieces, pieceType } = props;
+
+  const [state, setState] = useState({
     board: null,
     currentBlock: null,
     isWhiteNext: true,
@@ -21,29 +25,49 @@ export default class App extends React.Component {
       open: false,
       piece: null,
     },
-  };
+  });
 
-  componentDidMount() {
-    const { whitePieces, blackPieces } = this.props;
+  useEffect(() => {
     // Setup pieces for 2 players in board
-    const { isWhite } = this.state;
-    const newBoard = setupBoard(blackPieces, whitePieces, isWhite);
-    this.setState((prevState) => ({
+    const newBoard = setupBoard(
+      blackPieces,
+      whitePieces,
+      state.isWhite,
+      disabledPieces
+    );
+    setState((prevState) => ({
       ...prevState,
       board: newBoard,
     }));
-  }
+    return () => {
+      //
+    };
+  }, []);
 
-  handleClick = (block) => {
-    const { currentBlock } = this.state;
+  useEffect(() => {
+    if (state.board) {
+      const newState = highLightBlocksWithType({ ...state, pieceType });
+      setState((prevState) => ({
+        ...prevState,
+        ...newState,
+        pieceType,
+      }));
+    }
+    return () => {
+      //
+    };
+  }, [pieceType]);
+
+  const handleClick = (block) => {
+    const { currentBlock } = state;
 
     if (!currentBlock) {
       /**
        * 1. Get available blocks to move and which ones can catch then Hight hight light those
        * 2. Set current block state in order to move or catch later on
        */
-      const newState = handleGetNewPositions({ ...this.state, block });
-      this.setState((prevState) => ({
+      const newState = handleGetNewPositions({ ...state, block });
+      setState((prevState) => ({
         ...prevState,
         ...newState,
         currentBlock: block,
@@ -62,10 +86,10 @@ export default class App extends React.Component {
       // Then get new available position for that block
       if (block.piece && block.piece.isWhite === currentBlock.piece.isWhite) {
         const newState = handleResetAndGetNewPositions({
-          ...this.state,
+          ...state,
           block,
         });
-        this.setState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           ...newState,
           currentBlock: block,
@@ -75,14 +99,14 @@ export default class App extends React.Component {
         if (!block.piece) {
           if (isCastlingMove(currentBlock, block)) {
             const newState = handleCastlingMove({
-              ...this.state,
+              ...state,
               block,
               availablePositions: [
-                ...this.state.availablePositions,
+                ...state.availablePositions,
                 currentBlock.piece.position,
               ],
             });
-            this.setState((prevState) => ({
+            setState((prevState) => ({
               ...prevState,
               ...newState,
               currentBlock: null,
@@ -91,8 +115,8 @@ export default class App extends React.Component {
               isWhite: !prevState.isWhite,
             }));
           } else {
-            const newState = handleNormalMove({ ...this.state, block });
-            this.setState((prevState) => ({
+            const newState = handleNormalMove({ ...state, block });
+            setState((prevState) => ({
               ...prevState,
               ...newState,
               currentBlock: null,
@@ -103,11 +127,11 @@ export default class App extends React.Component {
           }
         } else {
           const newState = handleCatchOther({
-            ...this.state,
+            ...state,
             block,
             isMoved: false,
           });
-          this.setState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
             ...newState,
             currentBlock: null,
@@ -120,22 +144,11 @@ export default class App extends React.Component {
     }
   };
 
-  handlePromotionForPawn = (board, piece) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      promotionForPawn: {
-        piece,
-        open: true,
-      },
-    }));
-    return board;
-  };
-
-  handlePromotionClick = (type) => {
-    const { promotionForPawn, board } = this.state;
+  const handlePromotionClick = (type) => {
+    const { promotionForPawn, board } = state;
     const newBoard = [...board];
     newBoard[promotionForPawn.piece.index].piece.type = type;
-    this.setState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       board: newBoard,
       promotionForPawn: {
@@ -145,16 +158,17 @@ export default class App extends React.Component {
     }));
   };
 
-  render() {
-    const { board, promotionForPawn, isWhiteNext } = this.state;
-    return (
-      <Board
-        board={board}
-        promotion={promotionForPawn}
-        isWhiteNext={isWhiteNext}
-        onClick={this.handleClick}
-        onPromotionClick={this.handlePromotionClick}
-      />
-    );
-  }
-}
+  const { board, promotionForPawn, isWhiteNext } = state;
+
+  return (
+    <Board
+      board={board}
+      promotion={promotionForPawn}
+      isWhiteNext={isWhiteNext}
+      onClick={handleClick}
+      onPromotionClick={handlePromotionClick}
+    />
+  );
+};
+
+export default Game;

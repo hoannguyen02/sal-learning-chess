@@ -1,9 +1,36 @@
 import React from 'react';
-import { Game } from './components';
-import { BLACK_PIECES, WHITE_PIECES } from './constants';
+import Home from './pages/home';
+import BoardAndPieces from './pages/board-and-pieces';
+import MoveAndCapture from './pages/move-and-capture';
+import Principles from './pages/principles';
+import Strategies from './pages/strategies';
 
 const App = () => {
-  return <Game whitePieces={WHITE_PIECES} blackPieces={BLACK_PIECES} />;
+  const { pathname } = window.location;
+  let page;
+  switch (pathname) {
+    case '/':
+      page = <Home />;
+      break;
+    case '/board-and-pieces':
+      page = <BoardAndPieces />;
+      break;
+    case '/move-and-capture':
+      page = <MoveAndCapture />;
+      break;
+    case '/principles':
+      page = <Principles />;
+      break;
+    case '/strategies':
+      page = <Strategies />;
+      break;
+
+    default:
+      page = 'Wrong url';
+      break;
+  }
+
+  return <div className="container">{page}</div>;
 };
 
 export default App;

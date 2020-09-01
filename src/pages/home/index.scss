@@ -1,0 +1,12 @@
+.chess-menu {
+  list-style-type: none;
+  .chess-menu-item {
+    width: 50%;
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    &:hover {
+      color: green;
+    }
+  }
+}

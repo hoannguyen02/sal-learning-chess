@@ -10,6 +10,7 @@ const Block = ({ onClick, whiteClass, block }) => {
       } ${block.catchHighLight ? 'catch-high-light' : ''}`}
       onClick={() => onClick(block)}
       disabled={block.disabled}
+      style={{ opacity: block.opacity }}
     >
       {block.piece && (
         <PieceIcon type={block.piece.type} isWhite={block.piece.isWhite} />

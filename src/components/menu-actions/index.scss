@@ -1,0 +1,8 @@
+.menu-actions {
+  position: relative;
+  .action-item {
+    &.active {
+      background: red;
+    }
+  }
+}

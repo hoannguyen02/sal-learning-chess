@@ -27,11 +27,7 @@ code {
 .block-base {
   height: 47px;
   @media (min-width: 768px) {
-    height: 96px;
-  }
-
-  @media (min-width: 1440px) {
-    height: 100px;
+    height: 75px;
   }
 }
 
@@ -45,5 +41,15 @@ code {
     display: flex;
     font-size: 14px;
     color: #b8a8a8;
+  }
+}
+
+.container {
+  width: 100%;
+  margin: auto;
+  box-sizing: border-box;
+  @media (min-width: 1170px) {
+    padding: 0 15px;
+    width: 1170px;
   }
 }
