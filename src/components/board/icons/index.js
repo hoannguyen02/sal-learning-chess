@@ -4,23 +4,24 @@ import BlackKing from './BlackKing';
 import WhiteKing from './WhiteKing';
 import BlackQueen from './BlackQueen';
 import WhiteQueen from './WhiteQueen';
-import BlackPawn from './BlackPawn';
-import WhitePawn from './WhitePawn';
 import WhiteKnight from './WhiteKnight';
 import BlackKnight from './BlackKnight';
 import BlackRook from './BlackRook';
 import WhiteRook from './WhiteRook';
 import WhiteBishop from './WhiteBishop';
 import BlackBishop from './BlackBishop';
+import Pawn from './Pawn';
 
-const PieceIcon = ({ type, isWhite }) => {
+const PieceIcon = ({ type, isWhite, enPassant }) => {
   switch (type) {
     case PieceType.KING:
       return isWhite ? <WhiteKing /> : <BlackKing />;
     case PieceType.QUEEN:
       return isWhite ? <WhiteQueen /> : <BlackQueen />;
     case PieceType.PAWN:
-      return isWhite ? <WhitePawn /> : <BlackPawn />;
+      return (
+        <Pawn fillColor={enPassant ? '#e86666' : isWhite ? '#fff' : '#000'} />
+      );
     case PieceType.KNIGHT:
       return isWhite ? <WhiteKnight /> : <BlackKnight />;
     case PieceType.ROOK:

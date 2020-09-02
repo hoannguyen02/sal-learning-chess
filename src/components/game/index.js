@@ -10,6 +10,8 @@ import {
   handleResetAndGetNewPositions,
   handleCastlingMove,
   highLightBlocksWithType,
+  isEnPassant,
+  handleEnPassantCapture,
 } from '../../utils';
 
 const Game = (props) => {
@@ -97,7 +99,24 @@ const Game = (props) => {
       } else {
         // Move if there is no piece in block, otherwise catch
         if (!block.piece) {
-          if (isCastlingMove(currentBlock, block)) {
+          const [x, y] = block.position;
+          const { isWhite, isWhiteNext } = state;
+          const enX = isWhiteNext ? x + 1 : x - 1;
+          if (isEnPassant(board, [enX, y], isWhite)) {
+            const newState = handleEnPassantCapture({
+              ...state,
+              block,
+              isMoved: false,
+            });
+            setState((prevState) => ({
+              ...prevState,
+              ...newState,
+              currentBlock: null,
+              availablePositions: null,
+              isWhiteNext: !prevState.isWhiteNext,
+              isWhite: !prevState.isWhite,
+            }));
+          } else if (isCastlingMove(currentBlock, block)) {
             const newState = handleCastlingMove({
               ...state,
               block,

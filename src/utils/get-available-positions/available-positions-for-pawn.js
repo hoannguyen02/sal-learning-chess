@@ -1,4 +1,5 @@
-import { PieceType } from '../../constants';
+import { isEnPassant } from '../is-en-passant';
+
 export { getPositionsForPawn };
 
 function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
@@ -10,13 +11,8 @@ function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
   if (isEmptyPieceBlock(board, forwardOnePosition)) {
     blocks.push(forwardOnePosition);
   }
-  // Catch others
-  const captureNeighbors = pawnCaptureNeighbors(
-    board,
-    position,
-    isWhiteNext,
-    isWhite
-  );
+  // Capture others
+  const captureNeighbors = pawnCapture(board, position, isWhiteNext, isWhite);
 
   switch (piece.line) {
     case 1:
@@ -34,7 +30,7 @@ function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
       return [
         ...blocks,
         ...captureNeighbors,
-        ...pawnCapturePawnAtFifthLine(board, position, isWhite),
+        ...pawnEnPassantCapture(board, position, isWhite, isWhiteNext),
       ];
 
     default:
@@ -42,27 +38,21 @@ function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
   }
 }
 
-function pawnCapturePawnAtFifthLine(board, position, isWhite) {
+function pawnEnPassantCapture(board, position, isWhite, isWhiteNext) {
   const [x, y] = position;
-  const neighbors = [
-    [x, y - 1],
-    [x, y + 1],
-  ];
-  return board
-    .filter(({ piece }) => {
-      return piece
-        ? piece.isWhite !== isWhite &&
-            piece.type === PieceType.PAWN &&
-            piece.justMoved &&
-            neighbors.filter(
-              (n) => n[0] === piece.position[0] && n[1] === piece.position[1]
-            ).length > 0
-        : false;
-    })
-    .map((block) => block.position);
+  const enPassantPosition = [];
+  const enX = isWhiteNext ? x - 1 : x + 1;
+  if (isEnPassant(board, [x, y - 1], isWhite)) {
+    enPassantPosition.push([enX, y - 1]);
+  }
+  if (isEnPassant(board, [x, y + 1], isWhite)) {
+    enPassantPosition.push([enX, y + 1]);
+  }
+
+  return enPassantPosition;
 }
 
-function pawnCaptureNeighbors(board, position, isWhiteNext, isWhite) {
+function pawnCapture(board, position, isWhiteNext, isWhite) {
   let neighbors = [];
   const iIndex = isWhiteNext ? position[0] - 1 : position[0] + 1;
   switch (position[1]) {

@@ -19,10 +19,13 @@
       display: block;
       left: 37.5%;
       top: 37.5%;
-      background: #e7a843;
+      background: #8ea68e;
       border-radius: 50%;
     }
   }
+  // &.en-passant {
+  //   background-color: black;
+  // }
   &.high-light.catch-high-light {
     &:after {
       width: 75%;

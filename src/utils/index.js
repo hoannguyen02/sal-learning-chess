@@ -13,3 +13,6 @@ export * from './handle-castling-move';
 export * from './handle-normal-move';
 export * from './handle-capture';
 export * from './high-light-blocks-with-type';
+export * from './is-en-passant';
+export * from './handle-en-passant-capture';
+export * from './is-en-passant';

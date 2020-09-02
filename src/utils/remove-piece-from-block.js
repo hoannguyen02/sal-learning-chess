@@ -1,4 +1,22 @@
-export { removePieceFromCurrentBlock, removePieceFromNextBlock };
+import { findIndexInBoard } from './find-index-in-board';
+
+export {
+  removePieceFromCurrentBlock,
+  removePieceFromNextBlock,
+  removePieceFromEnPassantBlock,
+};
+
+function removePieceFromEnPassantBlock(state) {
+  const { board, block, isWhiteNext } = state;
+  const [x, y] = block.position;
+  const enX = isWhiteNext ? x + 1 : x - 1;
+  const index = findIndexInBoard(board, enX, y);
+  board[index].piece = null;
+  return {
+    ...state,
+    board,
+  };
+}
 
 function removePieceFromCurrentBlock(state) {
   const { board, currentBlock } = state;
