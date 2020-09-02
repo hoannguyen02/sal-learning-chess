@@ -11,7 +11,7 @@ function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
     blocks.push(forwardOnePosition);
   }
   // Catch others
-  const catchNeighbors = pawnCatchNeighbors(
+  const captureNeighbors = pawnCaptureNeighbors(
     board,
     position,
     isWhiteNext,
@@ -29,20 +29,20 @@ function getPositionsForPawn({ block, isWhiteNext, isWhite, board }) {
       ) {
         blocks.push(forwardTwoPosition);
       }
-      return [...blocks, ...catchNeighbors];
+      return [...blocks, ...captureNeighbors];
     case 5:
       return [
         ...blocks,
-        ...catchNeighbors,
-        ...pawnCatchOtherPawnAtFifthLine(board, position, isWhite),
+        ...captureNeighbors,
+        ...pawnCapturePawnAtFifthLine(board, position, isWhite),
       ];
 
     default:
-      return [...blocks, ...catchNeighbors];
+      return [...blocks, ...captureNeighbors];
   }
 }
 
-function pawnCatchOtherPawnAtFifthLine(board, position, isWhite) {
+function pawnCapturePawnAtFifthLine(board, position, isWhite) {
   const [x, y] = position;
   const neighbors = [
     [x, y - 1],
@@ -62,7 +62,7 @@ function pawnCatchOtherPawnAtFifthLine(board, position, isWhite) {
     .map((block) => block.position);
 }
 
-function pawnCatchNeighbors(board, position, isWhiteNext, isWhite) {
+function pawnCaptureNeighbors(board, position, isWhiteNext, isWhite) {
   let neighbors = [];
   const iIndex = isWhiteNext ? position[0] - 1 : position[0] + 1;
   switch (position[1]) {
