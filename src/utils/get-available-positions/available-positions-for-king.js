@@ -2,7 +2,7 @@ import { findIndexInBoard } from '../find-index-in-board';
 import {
   castlingKingSidePositions,
   castlingQueenSidePositions,
-} from './available-positions-castling';
+} from './castling-positions';
 
 export { getPositionsForKing };
 /**

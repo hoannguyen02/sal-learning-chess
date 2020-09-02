@@ -2,6 +2,11 @@
 import { findIndexInBoard } from '../find-index-in-board';
 import { PieceType, CastlingYPosition } from '../../constants';
 
+// The King must not have moved previously in the game.
+// The Rook that is castling must not have moved previously in the game.
+// No piece must be located on a square in between the King and Rook that are castling.
+// The King must not be in check.
+// The King and Rook can't be moved to a square that is attacked.
 export { castlingKingSidePositions, castlingQueenSidePositions };
 
 // King side
@@ -21,12 +26,19 @@ function castlingKingSidePositions({ block, isWhiteNext, isWhite, board }) {
   ) {
     return [];
   }
+  // Make sure no check for King before move
+  if (isKingInCheckCastling({ board, x, y, isWhiteNext, isWhite })) {
+    return [];
+  }
   // Make sure Rook still there and didn't move yet
   if (!isRookValidForCastling({ board, x, y: y + 3 })) {
     return [];
   }
   // Make sure no check for King after moved
-  if (isKingInCheckCastling({ board, x, y: y + 2, isWhiteNext, isWhite })) {
+  if (
+    isKingInCheckCastling({ board, x, y: y + 2, isWhiteNext, isWhite }) ||
+    isRookInCheckCastling({ board, x, y: y + 1, isWhiteNext, isWhite })
+  ) {
     return [];
   }
   // Make sure Rook on the right side
@@ -51,14 +63,22 @@ function castlingQueenSidePositions({ block, board, isWhiteNext, isWhite }) {
   ) {
     return [];
   }
+  // Make sure no check for King before move
+  if (isKingInCheckCastling({ board, x, y, isWhiteNext, isWhite })) {
+    return [];
+  }
   // Make sure Rook still there and didn't move yet
   if (!isRookValidForCastling({ board, x, y: y - 4 })) {
     return [];
   }
   // Make sure no check for King after moved
-  if (isKingInCheckCastling({ board, x, y: y - 2, isWhiteNext, isWhite })) {
+  if (
+    isKingInCheckCastling({ board, x, y: y - 2, isWhiteNext, isWhite }) ||
+    isRookInCheckCastling({ board, x, y: y - 1, isWhiteNext, isWhite })
+  ) {
     return [];
   }
+
   // Make sure Rook on the right side
   return [[x, y - 2]];
 }
@@ -71,6 +91,21 @@ function castlingQueenSidePositions({ block, board, isWhiteNext, isWhite }) {
  * @param {*} param0
  */
 function isKingInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
+  return (
+    isFrontInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
+    isDiagonalInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
+    isKnightNearestInCheckCastling({ board, x, y, isWhiteNext, isWhite })
+  );
+}
+
+/**
+ * We need to check these directions
+ * Front
+ * Diagonal
+ * Knight nearest
+ * @param {*} param0
+ */
+function isRookInCheckCastling({ board, x, y, isWhiteNext, isWhite }) {
   return (
     isFrontInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
     isDiagonalInCheckCastling({ board, x, y, isWhiteNext, isWhite }) ||
