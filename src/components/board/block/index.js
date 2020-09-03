@@ -8,7 +8,7 @@ const Block = ({ onClick, whiteClass, block }) => {
     <button
       className={`chess-block block-base ${whiteClass} ${
         block.highLight ? 'high-light' : ''
-      } ${block.catchHighLight ? 'catch-high-light' : ''}`}
+      } ${block.catchHighLight ? 'capture-high-light' : ''}`}
       onClick={() => onClick(block)}
       disabled={block.disabled}
       style={{ opacity: block.opacity }}

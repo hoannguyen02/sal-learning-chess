@@ -5,7 +5,7 @@ import { getPositionsForKnight } from './available-positions-for-knight';
 import { getPositionsForPawn } from './available-positions-for-pawn';
 import { getPositionsForRook } from './available-positions-for-rook';
 
-// Get available blocks to move and which ones can catch then hight light those
+// Get available blocks to move and which ones can capture then hight light those
 export function getAvailablePositions(state) {
   const { block, board, isWhiteNext, isWhite } = state;
   let availablePositions = [];

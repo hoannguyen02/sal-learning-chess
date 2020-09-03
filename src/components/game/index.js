@@ -65,8 +65,8 @@ const Game = (props) => {
 
     if (!currentBlock) {
       /**
-       * 1. Get available blocks to move and which ones can catch then Hight hight light those
-       * 2. Set current block state in order to move or catch later on
+       * 1. Get available blocks to move and which ones can capture then Hight hight light those
+       * 2. Set current block state in order to move or capture later on
        */
       const newState = handleGetNewPositions({ ...state, block });
       setState((prevState) => ({
@@ -83,7 +83,7 @@ const Game = (props) => {
       ) {
         return;
       }
-      // Incase user click another blocks, meaning that not move or catch
+      // Incase user click another blocks, meaning that not move or capture
       // We need to reset previous available positions and reset highlight
       // Then get new available position for that block
       if (block.piece && block.piece.isWhite === currentBlock.piece.isWhite) {
@@ -97,7 +97,7 @@ const Game = (props) => {
           currentBlock: block,
         }));
       } else {
-        // Move if there is no piece in block, otherwise catch
+        // Move if there is no piece in block, otherwise capture
         if (!block.piece) {
           const [x, y] = block.position;
           const { isWhite, isWhiteNext } = state;
