@@ -9,7 +9,7 @@ function movePiece(state) {
   const { position: newPos } = newBlock;
   // Check following steps to update information for piece
   // Update new position
-  // Update line number, justMoved state in case Pawn piece
+  // Update line number, enPassant state in case Pawn piece
   // Update isMoved state incase Rook or King in order to check castling move later on
   const newIndex = findIndexInBoard(board, newPos[0], newPos[1]);
   piece.position = newPos;
