@@ -19,9 +19,7 @@ const PieceIcon = ({ type, isWhite, enPassant }) => {
     case PieceType.QUEEN:
       return isWhite ? <WhiteQueen /> : <BlackQueen />;
     case PieceType.PAWN:
-      return (
-        <Pawn fillColor={enPassant ? '#e86666' : isWhite ? '#fff' : '#000'} />
-      );
+      return <Pawn fill={enPassant ? '#e86666' : isWhite ? '#fff' : '#000'} />;
     case PieceType.KNIGHT:
       return isWhite ? <WhiteKnight /> : <BlackKnight />;
     case PieceType.ROOK:

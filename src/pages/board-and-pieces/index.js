@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Game, MenuActions } from '../../components';
+import { GameForTwoPlayer, MenuActions } from '../../components';
 import { BLACK_PIECES, WHITE_PIECES, PieceType } from '../../constants';
 
 const MENU_ACTIONS = [
@@ -22,9 +22,8 @@ const BoardAndPieces = () => {
 
   return (
     <div className="board-and-pieces">
-      <Game
-        blackPieces={BLACK_PIECES}
-        whitePieces={WHITE_PIECES}
+      <GameForTwoPlayer
+        pieces={[...BLACK_PIECES, ...WHITE_PIECES]}
         disabledPieces
         pieceType={action.value}
       />

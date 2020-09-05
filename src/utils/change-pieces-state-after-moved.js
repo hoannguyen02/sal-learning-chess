@@ -1,8 +1,10 @@
 export { changePieceStateAfterMoved };
 function changePieceStateAfterMoved(state) {
-  const { board, isWhite } = state;
+  const { board, isWhite, whitePlayOnly } = state;
   const newBoard = board.map((block) => {
-    const enabled = block.piece ? !isWhite === block.piece.isWhite : false;
+    const enabled = !whitePlayOnly
+      ? block.piece && block.piece.isWhite === !isWhite
+      : block.piece && block.piece.isWhite === isWhite;
     return {
       ...block,
       disabled: !enabled,

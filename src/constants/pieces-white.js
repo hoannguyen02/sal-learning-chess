@@ -1,63 +1,11 @@
 import { PieceType } from './piece-type';
+import { initialPawnPieces } from '../utils/initial-pawn-pieces';
+
+export const INITIAL_WHITE_PAWNS = initialPawnPieces(true);
 
 export const WHITE_PIECES = [
   // Pawn
-  {
-    isWhite: true,
-    position: [6, 0],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 1],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 2],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 3],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 4],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 5],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 6],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
-  {
-    isWhite: true,
-    position: [6, 7],
-    line: 1,
-    enPassant: false,
-    type: PieceType.PAWN,
-  },
+  ...INITIAL_WHITE_PAWNS,
   // Rook
   { isWhite: true, position: [7, 0], type: PieceType.ROOK, isMoved: false },
   { isWhite: true, position: [7, 7], type: PieceType.ROOK, isMoved: false },
