@@ -1,12 +1,43 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import Block from './block';
 import './index.scss';
 import PromotionPopup from './promotion-popup';
 import VerticalCaption from './vertical-caption';
 import HorizontalCaption from './horizontal-caption';
+import { useBoard } from '../../hooks';
 
 const Board = (props) => {
-  const { board, onClick, promotion, onPromotionClick, isWhiteNext } = props;
+  const { pieces, disabledPieces, pieceType } = props;
+  const {
+    boardState,
+    handleClick,
+    handlePromotionClick,
+    updateBoard,
+    highLightBasedOnTypeHandler,
+  } = useBoard({
+    board: null,
+    currentBlock: null,
+    isWhiteNext: true,
+    isWhite: true,
+    availablePositions: null,
+    promotionForPawn: {
+      open: false,
+      piece: null,
+    },
+  });
+
+  useEffect(() => {
+    updateBoard(boardState, pieces, disabledPieces);
+  }, [pieces, disabledPieces, updateBoard]);
+
+  useEffect(() => {
+    boardState.board &&
+      highLightBasedOnTypeHandler(boardState.board, pieceType);
+  }, [pieceType, highLightBasedOnTypeHandler]);
+
+  const { board, isWhiteNext, promotionForPawn } = boardState;
+
   return board && Array.isArray(board) && board.length > 0 ? (
     <div className="board">
       <div className="clear-fix">
@@ -15,7 +46,7 @@ const Board = (props) => {
         {board.map((block, index) => (
           <Block
             block={block}
-            onClick={onClick}
+            onClick={(block) => handleClick(block, boardState)}
             whiteClass={
               (block.position[0] % 2 === 0 && block.position[1] % 2 !== 0) ||
               (block.position[0] % 2 !== 0 && block.position[1] % 2 === 0)
@@ -26,11 +57,11 @@ const Board = (props) => {
           />
         ))}
       </div>
-      {promotion.open && (
+      {promotionForPawn && promotionForPawn.open && (
         <PromotionPopup
-          piece={promotion.piece}
-          open={promotion.open}
-          onClick={onPromotionClick}
+          piece={promotionForPawn.piece}
+          open={promotionForPawn.open}
+          onClick={(type) => handlePromotionClick(type, boardState)}
           isWhiteNext={isWhiteNext}
         />
       )}

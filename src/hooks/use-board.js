@@ -1,0 +1,242 @@
+import { useReducer, useCallback } from 'react';
+import {
+  isEnPassant,
+  isCastlingMove,
+  handleGetNewPositions,
+  handleResetAndGetNewPositions,
+  handleEnPassantCapture,
+  handleCastlingMove,
+  handleNormalMove,
+  handleCapture,
+  setupBoard,
+  highLightBlocksWithType,
+} from '../utils';
+
+const BoardActionType = {
+  // Fundamentals
+  GET_NEW_POSITIONS: 'GET_NEW_POSITIONS',
+  RESET_AND_GET_NEW_POSITIONS: 'RESET_AND_GET_NEW_POSITIONS',
+  NORMAL_MOVES: 'NORMAL_MOVES',
+  CASTLING_MOVES: 'CASTLING_MOVES',
+  NORMAL_CAPTURE: 'NORMAL_CAPTURE',
+  EN_PASSANT_CAPTURE: 'EN_PASSANT_CAPTURE',
+  PROMOTION: 'PROMOTION',
+  UPDATE_BOARD: 'UPDATE_BOARD',
+  // Optionals
+  HIGHLIGHT_BASED_ON_TYPE: 'HIGHLIGHT_BASED_ON_TYPE',
+};
+
+export const useBoard = (state) => {
+  const [boardState, dispatch] = useReducer(boardReducer, state);
+
+  // Fundamentals
+  const updateBoard = useCallback((state, pieces, disabledPieces) => {
+    const newBoard = setupBoard(pieces, state.isWhite, disabledPieces);
+    dispatch({
+      type: BoardActionType.UPDATE_BOARD,
+      newBoard,
+    });
+  }, []);
+
+  const handlePromotionClick = useCallback((type, state) => {
+    const { promotionForPawn, board } = state;
+    const newBoard = [...board];
+    newBoard[promotionForPawn.piece.index].piece.type = type;
+    dispatch({
+      type: BoardActionType.PROMOTION,
+      newBoard,
+    });
+  }, []);
+
+  const handleClick = useCallback((block, state) => {
+    const { currentBlock, board } = state;
+    if (!currentBlock) {
+      dispatch({
+        type: BoardActionType.GET_NEW_POSITIONS,
+        block,
+      });
+    } else {
+      // Incase user click again in that block
+      if (
+        currentBlock.position[0] === block.position[0] &&
+        currentBlock.position[1] === block.position[1]
+      ) {
+        return;
+      }
+      // Incase user click another blocks(not move or capture) we need:
+      // Reset previous available positions and reset highlight
+      // Get new available position for that block
+      // Otherwise we need to handle capture and moves
+      if (block.piece && block.piece.isWhite === currentBlock.piece.isWhite) {
+        dispatch({
+          type: BoardActionType.RESET_AND_GET_NEW_POSITIONS,
+          block,
+        });
+      } else {
+        if (!block.piece) {
+          const [x, y] = block.position;
+          const { isWhite, isWhiteNext } = state;
+          const enX = isWhiteNext ? x + 1 : x - 1;
+          if (isEnPassant(board, [enX, y], isWhite)) {
+            dispatch({
+              type: BoardActionType.EN_PASSANT_CAPTURE,
+              block,
+            });
+          } else if (isCastlingMove(currentBlock, block)) {
+            dispatch({
+              type: BoardActionType.CASTLING_MOVES,
+              block,
+            });
+          } else {
+            dispatch({
+              type: BoardActionType.NORMAL_MOVES,
+              block,
+            });
+          }
+        } else {
+          dispatch({
+            type: BoardActionType.NORMAL_CAPTURE,
+            block,
+          });
+        }
+      }
+    }
+  }, []);
+
+  // Optionals
+  const highLightBasedOnTypeHandler = useCallback((board, pieceType) => {
+    const newBoard = highLightBlocksWithType(board, pieceType);
+    dispatch({
+      type: BoardActionType.HIGHLIGHT_BASED_ON_TYPE,
+      newBoard,
+    });
+  }, []);
+  return {
+    boardState,
+    handleClick,
+    handlePromotionClick,
+    updateBoard,
+    highLightBasedOnTypeHandler,
+  };
+};
+
+// Board reducer
+function boardReducer(state, action) {
+  const { type, block, newBoard } = action;
+  const {
+    currentBlock,
+    whitePlayOnly,
+    isWhiteNext,
+    isWhite,
+    availablePositions,
+  } = state;
+
+  let newState;
+  switch (type) {
+    // Fundamentals
+    case BoardActionType.UPDATE_BOARD:
+      return {
+        ...state,
+        board: newBoard,
+      };
+    case BoardActionType.PROMOTION:
+      return {
+        ...state,
+        board: newBoard,
+        promotionForPawn: {
+          piece: null,
+          open: false,
+        },
+      };
+    case BoardActionType.GET_NEW_POSITIONS:
+      newState = handleGetNewPositions({ ...state, block });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: block,
+      };
+    case BoardActionType.RESET_AND_GET_NEW_POSITIONS:
+      newState = handleResetAndGetNewPositions({
+        ...state,
+        block,
+      });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: block,
+      };
+    case BoardActionType.EN_PASSANT_CAPTURE:
+      newState = handleEnPassantCapture({
+        ...state,
+        block,
+        isMoved: false,
+      });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: null,
+        availablePositions: null,
+        ...(!whitePlayOnly && {
+          isWhiteNext: !isWhiteNext,
+          isWhite: !isWhite,
+        }),
+      };
+    case BoardActionType.CASTLING_MOVES:
+      newState = handleCastlingMove({
+        ...state,
+        block,
+        availablePositions: [
+          ...availablePositions,
+          currentBlock.piece.position,
+        ],
+      });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: null,
+        availablePositions: null,
+        ...(!whitePlayOnly && {
+          isWhiteNext: !isWhiteNext,
+          isWhite: !isWhite,
+        }),
+      };
+    case BoardActionType.NORMAL_MOVES:
+      newState = handleNormalMove({ ...state, block });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: null,
+        availablePositions: null,
+        ...(!whitePlayOnly && {
+          isWhiteNext: !isWhiteNext,
+          isWhite: !isWhite,
+        }),
+      };
+    case BoardActionType.NORMAL_CAPTURE:
+      newState = handleCapture({
+        ...state,
+        block,
+        isMoved: false,
+      });
+      return {
+        ...state,
+        ...newState,
+        currentBlock: null,
+        availablePositions: null,
+        ...(!whitePlayOnly && {
+          isWhiteNext: !isWhiteNext,
+          isWhite: !isWhite,
+        }),
+      };
+
+    // Optionals
+    case BoardActionType.HIGHLIGHT_BASED_ON_TYPE:
+      return {
+        ...state,
+        board: newBoard,
+      };
+
+    default:
+      return state;
+  }
+}
