@@ -30,13 +30,21 @@ export const useBoard = (state) => {
   const [boardState, dispatch] = useReducer(boardReducer, state);
 
   // Fundamentals
-  const updateBoard = useCallback((state, pieces, disabledPieces) => {
-    const newBoard = setupBoard(pieces, state.isWhite, disabledPieces);
-    dispatch({
-      type: BoardActionType.UPDATE_BOARD,
-      newBoard,
-    });
-  }, []);
+  const updateBoard = useCallback(
+    (state, pieces, disabledPieces, isWhitePlayOnly) => {
+      const newBoard = setupBoard(
+        pieces,
+        state.isWhite,
+        disabledPieces,
+        isWhitePlayOnly
+      );
+      dispatch({
+        type: BoardActionType.UPDATE_BOARD,
+        newBoard,
+      });
+    },
+    []
+  );
 
   const handlePromotionClick = useCallback((type, state) => {
     const { promotionForPawn, board } = state;

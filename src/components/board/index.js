@@ -8,7 +8,7 @@ import HorizontalCaption from './horizontal-caption';
 import { useBoard } from '../../hooks';
 
 const Board = (props) => {
-  const { pieces, disabledPieces, pieceType } = props;
+  const { pieces, disabledPieces, pieceType, isWhitePlayOnly } = props;
   const {
     boardState,
     handleClick,
@@ -28,7 +28,7 @@ const Board = (props) => {
   });
 
   useEffect(() => {
-    updateBoard(boardState, pieces, disabledPieces);
+    updateBoard(boardState, pieces, disabledPieces, isWhitePlayOnly);
   }, [pieces, disabledPieces, updateBoard]);
 
   useEffect(() => {
