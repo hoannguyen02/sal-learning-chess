@@ -133,7 +133,7 @@ function boardReducer(state, action) {
   const { type, block, newBoard } = action;
   const {
     currentBlock,
-    whitePlayOnly,
+    isWhitePlayOnly,
     isWhiteNext,
     isWhite,
     availablePositions,
@@ -184,7 +184,7 @@ function boardReducer(state, action) {
         ...newState,
         currentBlock: null,
         availablePositions: null,
-        ...(!whitePlayOnly && {
+        ...(!isWhitePlayOnly && {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
@@ -203,7 +203,7 @@ function boardReducer(state, action) {
         ...newState,
         currentBlock: null,
         availablePositions: null,
-        ...(!whitePlayOnly && {
+        ...(!isWhitePlayOnly && {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
@@ -215,7 +215,7 @@ function boardReducer(state, action) {
         ...newState,
         currentBlock: null,
         availablePositions: null,
-        ...(!whitePlayOnly && {
+        ...(!isWhitePlayOnly && {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
@@ -231,7 +231,7 @@ function boardReducer(state, action) {
         ...newState,
         currentBlock: null,
         availablePositions: null,
-        ...(!whitePlayOnly && {
+        ...(!isWhitePlayOnly && {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),

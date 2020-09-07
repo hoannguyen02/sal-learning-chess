@@ -25,6 +25,7 @@ const Board = (props) => {
       open: false,
       piece: null,
     },
+    isWhitePlayOnly: props.isWhitePlayOnly,
   });
 
   useEffect(() => {
