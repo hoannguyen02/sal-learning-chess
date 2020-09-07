@@ -8,7 +8,7 @@ import {
   handleCastlingMove,
   handleNormalMove,
   handleCapture,
-  setupBoard,
+  updateBoard,
   highLightBlocksWithType,
 } from '../utils';
 
@@ -30,9 +30,9 @@ export const useBoard = (state) => {
   const [boardState, dispatch] = useReducer(boardReducer, state);
 
   // Fundamentals
-  const updateBoard = useCallback(
+  const handleUpdateBoard = useCallback(
     (state, pieces, disabledPieces, isWhitePlayOnly) => {
-      const newBoard = setupBoard(
+      const newBoard = updateBoard(
         pieces,
         state.isWhite,
         disabledPieces,
@@ -123,7 +123,7 @@ export const useBoard = (state) => {
     boardState,
     handleClick,
     handlePromotionClick,
-    updateBoard,
+    handleUpdateBoard,
     highLightBasedOnTypeHandler,
   };
 };

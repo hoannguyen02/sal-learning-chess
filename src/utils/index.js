@@ -1,4 +1,4 @@
-export * from './setup-board';
+export * from './update-board';
 export * from './get-available-positions';
 export * from './high-light-blocks';
 export * from './reset-available-positions';

@@ -1,9 +1,9 @@
 import { PieceType } from '../constants';
 import { generateBlocks } from './generate-blocks';
 import { findIndexInBoard } from './find-index-in-board';
-export { setupBoard };
+export { updateBoard };
 
-function setupBoard(pieces, isWhite, disabledPieces, whitePlayOnly) {
+function updateBoard(pieces, isWhite, disabledPieces, whitePlayOnly) {
   const board = generateBlocks();
   pieces.forEach((piece) => {
     const idx = findIndexInBoard(board, piece.position[0], piece.position[1]);

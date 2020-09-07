@@ -13,7 +13,7 @@ const Board = (props) => {
     boardState,
     handleClick,
     handlePromotionClick,
-    updateBoard,
+    handleUpdateBoard,
     highLightBasedOnTypeHandler,
   } = useBoard({
     board: null,
@@ -28,8 +28,8 @@ const Board = (props) => {
   });
 
   useEffect(() => {
-    updateBoard(boardState, pieces, disabledPieces, isWhitePlayOnly);
-  }, [pieces, disabledPieces, updateBoard]);
+    handleUpdateBoard(boardState, pieces, disabledPieces, isWhitePlayOnly);
+  }, [pieces, disabledPieces, handleUpdateBoard]);
 
   useEffect(() => {
     boardState.board &&
