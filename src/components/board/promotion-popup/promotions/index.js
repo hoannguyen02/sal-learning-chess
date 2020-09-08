@@ -12,7 +12,7 @@ const Promotions = ({ onClick, piece, isWhiteNext, open }) => {
     (position[0] % 2 !== 0 && position[1] % 2 === 0);
 
   useEffect(() => {
-    !isWhiteNext
+    isWhiteNext
       ? setPromotionStyles({ top: 0, bottom: 'auto' })
       : setPromotionStyles({ bottom: 0, top: 'auto' });
   }, [isWhiteNext]);
