@@ -1,5 +1,5 @@
 import { compose } from './compose';
-import { resetAvailablePositions } from './reset-available-positions';
+import { resetHighlightBlocks } from './reset-highlight-blocks';
 import { changePieceStateAfterMoved } from './change-pieces-state-after-moved';
 import { movePiece } from './move-piece';
 import { removePieceFromCurrentBlock } from './remove-piece-from-block';
@@ -16,7 +16,7 @@ const handleNormalMove = (state) =>
   normalMove(
     updatePromotionForPawn,
     changePieceStateAfterMoved,
-    resetAvailablePositions,
+    resetHighlightBlocks,
     removePieceFromCurrentBlock,
     movePiece
   )(state);

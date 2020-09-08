@@ -1,6 +1,6 @@
 import { compose } from './compose';
 import { castlingMovePiece } from './castling-move-piece';
-import { resetAvailablePositions } from './reset-available-positions';
+import { resetHighlightBlocks } from './reset-highlight-blocks';
 import { changePieceStateAfterMoved } from './change-pieces-state-after-moved';
 
 /**
@@ -12,7 +12,7 @@ import { changePieceStateAfterMoved } from './change-pieces-state-after-moved';
 const handleCastlingMove = (state) =>
   castlingMove(
     changePieceStateAfterMoved,
-    resetAvailablePositions,
+    resetHighlightBlocks,
     castlingMovePiece
   )(state);
 

@@ -1,8 +1,8 @@
 import { findIndexInBoard } from './find-index-in-board';
 import { CastlingYPosition, PieceType, CASTLING_POSITIONS } from '../constants';
-export { resetAvailablePositions };
+export { resetHighlightBlocks };
 // Reset available positions
-function resetAvailablePositions(state) {
+function resetHighlightBlocks(state) {
   const { board, availablePositions, currentBlock } = state;
   let newBoard = [...board];
   availablePositions.forEach((position) => {
