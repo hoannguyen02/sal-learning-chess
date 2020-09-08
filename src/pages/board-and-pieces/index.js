@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { MenuActions } from '../../components';
-import { PieceType } from '../../constants';
-import Board from '../../components/board';
+import { MenuActions } from '../../shared/components';
+import { PieceType } from '../../shared/constants';
 import {
   updateBoard,
   initialBlacks,
   initialWhites,
   highLightBlocksWithType,
-} from '../../utils';
+} from '../../shared/utils';
+import { Board } from '../../shared/components';
 
 const MENU_ACTIONS = [
   PieceType.PAWN,

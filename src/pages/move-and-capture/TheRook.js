@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useReducer, useEffect } from 'react';
-import { MenuActions } from '../../components';
-import Board from '../../components/board';
-import { PieceType } from '../../constants';
+import { Board, MenuActions } from '../../shared/components';
+import { PieceType } from '../../shared/constants';
 import {
   updateBoard,
   initialPawnPieces,
   initialBlacks,
   initialWhites,
-} from '../../utils';
+} from '../../shared/utils';
 
 const RookType = {
   NO_BLOCK: 'NO_BLOCK',
