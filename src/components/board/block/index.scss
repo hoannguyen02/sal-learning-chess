@@ -23,9 +23,6 @@
       border-radius: 50%;
     }
   }
-  // &.en-passant {
-  //   background-color: black;
-  // }
   &.high-light.capture-high-light {
     &:after {
       width: 75%;
@@ -35,6 +32,19 @@
       opacity: 0.5;
     }
   }
+  &.castling-high-light {
+    &:after {
+      position: absolute;
+      content: '';
+      width: calc(60% - 2.5px);
+      height: calc(60% - 2.5px);
+      display: block;
+      left: calc(20% - 2.5px);
+      top: calc(20% - 2.5px);
+      border: solid 5px #45964d;
+    }
+  }
+
   &:disabled {
     cursor: not-allowed;
   }

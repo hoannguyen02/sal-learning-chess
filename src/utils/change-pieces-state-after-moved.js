@@ -9,6 +9,7 @@ function changePieceStateAfterMoved(state) {
       ...block,
       disabled: !enabled,
       catchHighLight: false,
+      castlingHighLight: false,
       highLight: false,
     };
   });
