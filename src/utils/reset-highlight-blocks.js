@@ -14,6 +14,7 @@ function resetHighlightBlocks(state) {
       newBoard[idx].highLight = false;
       newBoard[idx].disabled = true;
       if (isCastling(currentBlock, position)) {
+        state.isCastlingMove = false;
         newBoard = handleResetHighlightCastling(newBoard, position, idx);
       }
     }
@@ -36,6 +37,7 @@ function isCastling(currentBlock, position) {
   const { piece } = currentBlock;
   return piece
     ? piece.type === PieceType.KING &&
+        !piece.isMoved &&
         CASTLING_POSITIONS.filter(
           ([x, y]) => x === position[0] && y === position[1]
         ).length > 0

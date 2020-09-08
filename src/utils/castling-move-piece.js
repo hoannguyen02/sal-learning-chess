@@ -1,25 +1,29 @@
-import { CastlingYPosition } from '../constants/castling-positions';
 import { findIndexInBoard } from './find-index-in-board';
 
 export { castlingMovePiece };
 
 function castlingMovePiece(state) {
-  const { board, currentBlock, block: newBlock } = state;
+  const { board, currentBlock: kingBlock, block: rookBlock } = state;
   let newBoard = [...board];
-  const { position: currentKingPos, piece } = currentBlock;
-  const { position: newKingPos } = newBlock;
+  const { position: currentKingPos, piece } = kingBlock;
+  const { position: currentRookPos } = rookBlock;
   // Move king from current to new block
-  newBoard = moveKingFromCurrentToNewBlock(newBoard, newKingPos, piece);
+  newBoard = moveKingFromCurrentToNewBlock(newBoard, currentRookPos, piece);
   // Remove king from current block
   newBoard = removePieceFromCurrentBlock(newBoard, currentKingPos);
   // Move rook from current to new block
   // Remove rook from current block
-  const [curRookPos, newRookPos] = getRookPositions(newKingPos);
-  newBoard = moveRookFromCurrentToNewBlock(newBoard, curRookPos, newRookPos);
+  const newRookPos = getRookPositions(currentRookPos);
+  newBoard = moveRookFromCurrentToNewBlock(
+    newBoard,
+    currentRookPos,
+    newRookPos
+  );
 
   return {
     ...state,
     board: newBoard,
+    isCastlingMove: false,
   };
 }
 
@@ -34,25 +38,22 @@ function moveRookFromCurrentToNewBlock(board, curRookPos, newRookPos) {
 }
 
 function getRookPositions(position) {
-  let curRookYIndex;
-  let newRookYIndex;
-  if (position[1] === CastlingYPosition.SIX) {
-    curRookYIndex = 7;
-    newRookYIndex = CastlingYPosition.SIX - 1;
-  } else {
-    newRookYIndex = CastlingYPosition.TWO + 1;
-    curRookYIndex = 0;
-  }
-  return [
-    [position[0], curRookYIndex],
-    [position[0], newRookYIndex],
-  ];
+  const [x, y] = position;
+  const newKingY = y === 0 ? 3 : 5;
+  return [x, newKingY];
 }
 
-function moveKingFromCurrentToNewBlock(board, position, piece) {
-  const index = findIndexInBoard(board, position[0], position[1]);
+function getNewKingPosition(position) {
+  const [x, y] = position;
+  const newKingY = y === 0 ? 2 : 6;
+  return [x, newKingY];
+}
+
+function moveKingFromCurrentToNewBlock(board, curRookPos, piece) {
+  const [x, y] = getNewKingPosition(curRookPos);
+  const index = findIndexInBoard(board, x, y);
   board[index].piece = piece;
-  board[index].piece.position = position;
+  board[index].piece.position = [x, y];
   board[index].piece.isMoved = true;
   return board;
 }

@@ -1,7 +1,6 @@
 import { useReducer, useCallback } from 'react';
 import {
   isEnPassant,
-  isCastlingMove,
   handleGetNewPositions,
   handleResetAndGetNewPositions,
   handleEnPassantCapture,
@@ -9,6 +8,7 @@ import {
   handleNormalMove,
   handleCapture,
 } from '../utils';
+import { PieceType } from '../constants';
 
 const BoardActionType = {
   GET_NEW_POSITIONS: 'GET_NEW_POSITIONS',
@@ -41,8 +41,8 @@ export const useBoard = (state) => {
     });
   }, []);
 
-  const handleClick = useCallback((block, state) => {
-    const { currentBlock, board } = state;
+  const handleClick = useCallback((block, state, isCastling) => {
+    const { currentBlock, board, isCastlingMove } = state;
     if (!currentBlock) {
       dispatch({
         type: BoardActionType.GET_NEW_POSITIONS,
@@ -61,10 +61,17 @@ export const useBoard = (state) => {
       // Get new available position for that block
       // Otherwise we need to handle capture and moves
       if (block.piece && block.piece.isWhite === currentBlock.piece.isWhite) {
-        dispatch({
-          type: BoardActionType.RESET_AND_GET_NEW_POSITIONS,
-          block,
-        });
+        if (block.piece.type === PieceType.ROOK && isCastlingMove) {
+          dispatch({
+            type: BoardActionType.CASTLING_MOVES,
+            block,
+          });
+        } else {
+          dispatch({
+            type: BoardActionType.RESET_AND_GET_NEW_POSITIONS,
+            block,
+          });
+        }
       } else {
         if (!block.piece) {
           const [x, y] = block.position;
@@ -73,11 +80,6 @@ export const useBoard = (state) => {
           if (isEnPassant(board, [enX, y], isWhite)) {
             dispatch({
               type: BoardActionType.EN_PASSANT_CAPTURE,
-              block,
-            });
-          } else if (isCastlingMove(currentBlock, block)) {
-            dispatch({
-              type: BoardActionType.CASTLING_MOVES,
               block,
             });
           } else {

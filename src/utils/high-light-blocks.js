@@ -12,6 +12,7 @@ function highLightBlocks(state) {
     );
     if (idx >= 0) {
       if (isCastling(block, position)) {
+        state.isCastlingMove = true;
         newBoard = handleHighlightCastling(newBoard, idx, position);
       } else {
         newBoard[idx].highLight = true;
@@ -41,6 +42,7 @@ function isCastling(block, position) {
   const { piece } = block;
   return piece
     ? piece.type === PieceType.KING &&
+        !piece.isMoved &&
         CASTLING_POSITIONS.filter(
           ([x, y]) => x === position[0] && y === position[1]
         ).length > 0

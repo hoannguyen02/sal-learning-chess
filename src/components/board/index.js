@@ -25,6 +25,7 @@ const Board = (props) => {
       piece: null,
     },
     isWhitePlayOnly: props.isWhitePlayOnly,
+    isCastlingMove: false,
   });
   useEffect(() => {
     newBoard && handleUpdateBoard(newBoard);

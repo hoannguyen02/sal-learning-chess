@@ -49,28 +49,28 @@ function getPositionsForKing({ block, isWhiteNext, isWhite, board }) {
 
 function kingB4Positions(x, y) {
   const positions = [];
-  x - 1 > 0 && y + 1 < 7 && positions.push([x - 1, y + 1]);
-  x + 1 < 7 && y - 1 > 0 && positions.push([x + 1, y - 1]);
+  x - 1 >= 0 && y + 1 <= 7 && positions.push([x - 1, y + 1]);
+  x + 1 <= 7 && y - 1 >= 0 && positions.push([x + 1, y - 1]);
   return positions;
 }
 
 function kingB3Positions(x, y) {
   const positions = [];
-  x - 1 > 0 && y - 1 > 0 && positions.push([x - 1, y - 1]);
-  x + 1 < 7 && y + 1 < 7 && positions.push([x + 1, y + 1]);
+  x - 1 >= 0 && y - 1 >= 0 && positions.push([x - 1, y - 1]);
+  x + 1 <= 7 && y + 1 <= 7 && positions.push([x + 1, y + 1]);
   return positions;
 }
 
 function kingB2Positions(x, y) {
   const positions = [];
-  x - 1 > 0 && positions.push([x - 1, y]);
-  x + 1 < 7 && positions.push([x + 1, y]);
+  x - 1 >= 0 && positions.push([x - 1, y]);
+  x + 1 <= 7 && positions.push([x + 1, y]);
   return positions;
 }
 
 function kingB1Positions(x, y) {
   const positions = [];
-  y - 1 > 0 && positions.push([x, y - 1]);
-  y + 1 < 7 && positions.push([x, y + 1]);
+  y - 1 >= 0 && positions.push([x, y - 1]);
+  y + 1 <= 7 && positions.push([x, y + 1]);
   return positions;
 }
