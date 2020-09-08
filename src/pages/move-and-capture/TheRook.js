@@ -1,18 +1,21 @@
-import React, { useReducer } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useReducer, useEffect } from 'react';
 import { MenuActions } from '../../components';
 import Board from '../../components/board';
+import { PieceType } from '../../constants';
 import {
-  PieceType,
-  WHITE_PIECES,
-  BLACK_PIECES,
-  INITIAL_WHITE_PAWNS,
-} from '../../constants';
+  updateBoard,
+  initialPawnPieces,
+  initialBlacks,
+  initialWhites,
+} from '../../utils';
 
 const RookType = {
   NO_BLOCK: 'NO_BLOCK',
   BLOCK_BY_WHITES: 'BLOCK_BY_WHITES',
   BLOCK_BY_BLACKS: 'BLOCK_BY_BLACKS',
   CASTLING: 'CASTLING',
+  UPDATE_BOARD: 'UPDATE_BOARD',
 };
 
 const MENU_ACTIONS = [
@@ -22,16 +25,22 @@ const MENU_ACTIONS = [
   { title: 'Castling', value: RookType.CASTLING },
 ];
 
-const DEFAULT_ROOKS = [
-  { isWhite: true, position: [7, 0], type: PieceType.ROOK, isMoved: false },
-  { isWhite: true, position: [7, 7], type: PieceType.ROOK, isMoved: false },
-];
-
 const TheRook = () => {
   const [state, dispatch] = useReducer(theRookReducer, {
     currentMenu: MENU_ACTIONS[0],
-    pieces: DEFAULT_ROOKS,
+    pieces: getDefaultWhites(),
+    board: null,
   });
+
+  useEffect(() => {
+    if (state.pieces) {
+      const newBoard = updateBoard(state.pieces, true, true, true);
+      dispatch({
+        type: RookType.UPDATE_BOARD,
+        newBoard,
+      });
+    }
+  }, [state.pieces]);
 
   const handleClick = (menu) => {
     switch (menu.value) {
@@ -63,10 +72,10 @@ const TheRook = () => {
     }
   };
 
-  const { pieces, currentMenu } = state;
+  const { board, currentMenu } = state;
   return (
     <div className="board-and-pieces">
-      <Board pieces={pieces} isWhitePlayOnly />
+      <Board board={board} isWhitePlayOnly />
       <MenuActions
         actions={MENU_ACTIONS}
         onClick={handleClick}
@@ -80,28 +89,26 @@ export default TheRook;
 
 // Reducer
 function theRookReducer(state, action) {
-  const { type, currentMenu } = action;
+  const { type, currentMenu, newBoard } = action;
   switch (type) {
+    case RookType.UPDATE_BOARD:
+      return { ...state, board: newBoard };
     case RookType.NO_BLOCK:
-      return {
-        currentMenu,
-        pieces: DEFAULT_ROOKS,
-      };
+      return { board: null, currentMenu, pieces: getDefaultWhites() };
     case RookType.BLOCK_BY_WHITES:
-      return {
-        pieces: WHITE_PIECES,
-        currentMenu,
-      };
+      return { board: null, pieces: initialWhites(), currentMenu };
     case RookType.BLOCK_BY_BLACKS:
       return {
-        pieces: [...BLACK_PIECES, ...DEFAULT_ROOKS],
+        board: null,
+        pieces: [...initialBlacks(), ...getDefaultWhites()],
         currentMenu,
       };
     case RookType.CASTLING:
       return {
+        board: null,
         currentMenu,
         pieces: [
-          ...INITIAL_WHITE_PAWNS,
+          ...initialPawnPieces(true),
           {
             isWhite: true,
             position: [7, 0],
@@ -126,4 +133,11 @@ function theRookReducer(state, action) {
     default:
       return state;
   }
+}
+
+function getDefaultWhites() {
+  return [
+    { isWhite: true, position: [7, 0], type: PieceType.ROOK, isMoved: false },
+    { isWhite: true, position: [7, 7], type: PieceType.ROOK, isMoved: false },
+  ];
 }

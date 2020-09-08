@@ -16,4 +16,4 @@ export * from './high-light-blocks-with-type';
 export * from './is-en-passant';
 export * from './handle-en-passant-capture';
 export * from './is-en-passant';
-export * from './initial-pawn-pieces';
+export * from './initial-pieces';

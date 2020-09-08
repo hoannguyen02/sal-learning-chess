@@ -8,13 +8,12 @@ import HorizontalCaption from './horizontal-caption';
 import { useBoard } from '../../hooks';
 
 const Board = (props) => {
-  const { pieces, disabledPieces, pieceType, isWhitePlayOnly } = props;
+  const { board: newBoard } = props;
   const {
     boardState,
     handleClick,
     handlePromotionClick,
     handleUpdateBoard,
-    highLightBasedOnTypeHandler,
   } = useBoard({
     board: null,
     currentBlock: null,
@@ -27,15 +26,9 @@ const Board = (props) => {
     },
     isWhitePlayOnly: props.isWhitePlayOnly,
   });
-
   useEffect(() => {
-    handleUpdateBoard(boardState, pieces, disabledPieces, isWhitePlayOnly);
-  }, [pieces, disabledPieces, handleUpdateBoard]);
-
-  useEffect(() => {
-    boardState.board &&
-      highLightBasedOnTypeHandler(boardState.board, pieceType);
-  }, [pieceType, highLightBasedOnTypeHandler]);
+    newBoard && handleUpdateBoard(newBoard);
+  }, [newBoard]);
 
   const { board, isWhiteNext, promotionForPawn } = boardState;
 

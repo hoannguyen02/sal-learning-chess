@@ -8,12 +8,9 @@ import {
   handleCastlingMove,
   handleNormalMove,
   handleCapture,
-  updateBoard,
-  highLightBlocksWithType,
 } from '../utils';
 
 const BoardActionType = {
-  // Fundamentals
   GET_NEW_POSITIONS: 'GET_NEW_POSITIONS',
   RESET_AND_GET_NEW_POSITIONS: 'RESET_AND_GET_NEW_POSITIONS',
   NORMAL_MOVES: 'NORMAL_MOVES',
@@ -22,29 +19,17 @@ const BoardActionType = {
   EN_PASSANT_CAPTURE: 'EN_PASSANT_CAPTURE',
   PROMOTION: 'PROMOTION',
   UPDATE_BOARD: 'UPDATE_BOARD',
-  // Optionals
-  HIGHLIGHT_BASED_ON_TYPE: 'HIGHLIGHT_BASED_ON_TYPE',
 };
 
 export const useBoard = (state) => {
   const [boardState, dispatch] = useReducer(boardReducer, state);
 
-  // Fundamentals
-  const handleUpdateBoard = useCallback(
-    (state, pieces, disabledPieces, isWhitePlayOnly) => {
-      const newBoard = updateBoard(
-        pieces,
-        state.isWhite,
-        disabledPieces,
-        isWhitePlayOnly
-      );
-      dispatch({
-        type: BoardActionType.UPDATE_BOARD,
-        newBoard,
-      });
-    },
-    []
-  );
+  const handleUpdateBoard = useCallback((newBoard) => {
+    dispatch({
+      type: BoardActionType.UPDATE_BOARD,
+      newBoard,
+    });
+  }, []);
 
   const handlePromotionClick = useCallback((type, state) => {
     const { promotionForPawn, board } = state;
@@ -111,20 +96,11 @@ export const useBoard = (state) => {
     }
   }, []);
 
-  // Optionals
-  const highLightBasedOnTypeHandler = useCallback((board, pieceType) => {
-    const newBoard = highLightBlocksWithType(board, pieceType);
-    dispatch({
-      type: BoardActionType.HIGHLIGHT_BASED_ON_TYPE,
-      newBoard,
-    });
-  }, []);
   return {
     boardState,
     handleClick,
     handlePromotionClick,
     handleUpdateBoard,
-    highLightBasedOnTypeHandler,
   };
 };
 
@@ -141,7 +117,6 @@ function boardReducer(state, action) {
 
   let newState;
   switch (type) {
-    // Fundamentals
     case BoardActionType.UPDATE_BOARD:
       return {
         ...state,
@@ -235,13 +210,6 @@ function boardReducer(state, action) {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
-      };
-
-    // Optionals
-    case BoardActionType.HIGHLIGHT_BASED_ON_TYPE:
-      return {
-        ...state,
-        board: newBoard,
       };
 
     default:
