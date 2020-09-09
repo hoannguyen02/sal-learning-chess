@@ -32,7 +32,7 @@ const Block = (props) => {
         />
       )}
       {isUpdateModeOpened && (
-        <Action index={index} onClick={onActionModeClick} />
+        <Action piece={block.piece} index={index} onClick={onActionModeClick} />
       )}
     </button>
   );
