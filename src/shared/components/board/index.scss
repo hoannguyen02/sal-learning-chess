@@ -4,4 +4,9 @@
   min-width: 320px;
   text-align: center;
   position: relative;
+  .update-mode {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }

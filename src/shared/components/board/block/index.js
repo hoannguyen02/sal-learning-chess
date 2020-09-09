@@ -1,8 +1,17 @@
 import React from 'react';
 import './index.scss';
 import PieceIcon from '../icons';
+import Action from './Action';
 
-const Block = ({ onClick, whiteClass, block }) => {
+const Block = (props) => {
+  const {
+    onClick,
+    whiteClass,
+    block,
+    index,
+    onActionModeClick,
+    isUpdateModeOpened,
+  } = props;
   const enPassant = block.piece && block.piece.enPassant;
   return (
     <button
@@ -21,6 +30,9 @@ const Block = ({ onClick, whiteClass, block }) => {
           isWhite={block.piece.isWhite}
           enPassant={enPassant}
         />
+      )}
+      {isUpdateModeOpened && (
+        <Action index={index} onClick={onActionModeClick} />
       )}
     </button>
   );

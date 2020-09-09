@@ -8,7 +8,7 @@ import {
   handleNormalMove,
   handleCapture,
 } from '../utils';
-import { PieceType } from '../constants';
+import { PieceType, UpdateModeType } from '../constants';
 
 const BoardActionType = {
   GET_NEW_POSITIONS: 'GET_NEW_POSITIONS',
@@ -19,6 +19,11 @@ const BoardActionType = {
   EN_PASSANT_CAPTURE: 'EN_PASSANT_CAPTURE',
   PROMOTION: 'PROMOTION',
   UPDATE_BOARD: 'UPDATE_BOARD',
+  // Add/Update/Delete piece in block
+  ADD_PIECE: 'ADD_PIECE',
+  UPDATE_PIECE: 'UPDATE_PIECE',
+  DELETE_PIECE: 'DELETE_PIECE',
+  TOGGLE_UPDATE_MODE: 'TOGGLE_UPDATE_MODE',
 };
 
 export const useBoard = (state) => {
@@ -98,11 +103,35 @@ export const useBoard = (state) => {
     }
   }, []);
 
+  const handleToggleUpdateMode = () => {
+    dispatch({
+      type: BoardActionType.TOGGLE_UPDATE_MODE,
+    });
+  };
+
+  const handleActionModeClick = (mode) => {
+    switch (mode) {
+      case UpdateModeType.ADD:
+        debugger;
+        break;
+      case UpdateModeType.UPDATE:
+        debugger;
+        break;
+      case UpdateModeType.DELETE:
+        debugger;
+        break;
+      default:
+        break;
+    }
+  };
+
   return {
     boardState,
     handleClick,
     handlePromotionClick,
     handleUpdateBoard,
+    handleActionModeClick,
+    handleToggleUpdateMode,
   };
 };
 
@@ -119,6 +148,13 @@ function boardReducer(state, action) {
 
   let newState;
   switch (type) {
+    // Update Mode
+    case BoardActionType.TOGGLE_UPDATE_MODE:
+      return {
+        ...state,
+        isUpdateModeOpened: !state.isUpdateModeOpened,
+      };
+    // Main
     case BoardActionType.UPDATE_BOARD:
       return {
         ...state,

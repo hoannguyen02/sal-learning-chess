@@ -74,7 +74,7 @@ const TheRook = () => {
   const { board, currentMenu } = state;
   return (
     <div className="board-and-pieces">
-      <Board board={board} isWhitePlayOnly />
+      <Board board={board} isWhitePlayOnly updateMode />
       <MenuActions
         actions={MENU_ACTIONS}
         onClick={handleClick}
