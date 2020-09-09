@@ -18,6 +18,7 @@ function highLightBlocks(state) {
         newBoard[idx].highLight = true;
         newBoard[idx].catchHighLight = newBoard[idx].piece !== null;
         newBoard[idx].disabled = false;
+        state.isCastlingMove = false;
       }
     }
   });

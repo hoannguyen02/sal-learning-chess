@@ -41,7 +41,7 @@ export const useBoard = (state) => {
     });
   }, []);
 
-  const handleClick = useCallback((block, state, isCastling) => {
+  const handleClick = useCallback((block, state) => {
     const { currentBlock, board, isCastlingMove } = state;
     if (!currentBlock) {
       dispatch({
