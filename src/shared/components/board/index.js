@@ -31,7 +31,7 @@ const Board = (props) => {
     isUpdateModeOpened: false,
   });
   useEffect(() => {
-    newBoard && handleUpdateBoard(newBoard);
+    newBoard && handleUpdateBoard(newBoard, isUpdateModeOpened);
   }, [newBoard]);
 
   const {

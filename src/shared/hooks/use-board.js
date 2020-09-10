@@ -162,6 +162,7 @@ function boardReducer(state, action) {
       return {
         ...state,
         board: newBoard,
+        isUpdateModeOpened: false,
       };
     case BoardActionType.PROMOTION:
       return {
