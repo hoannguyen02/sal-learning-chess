@@ -18,6 +18,8 @@ const Board = (props) => {
     handleActionModeClick,
     handleToggleUpdateMode,
     handleCloseUpdateModePopup,
+    handleDeletePiece,
+    handleAddPiece,
   } = useBoard({
     board: null,
     currentBlock: null,
@@ -89,6 +91,8 @@ const Board = (props) => {
         <UpdateModePopup
           {...updateModePopup}
           onClose={handleCloseUpdateModePopup}
+          onAdd={handleAddPiece}
+          onDelete={handleDeletePiece}
         />
       )}
     </div>

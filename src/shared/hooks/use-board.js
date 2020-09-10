@@ -9,6 +9,7 @@ import {
   handleCapture,
   handleDisableBlocks,
   handleEnableBlocks,
+  deletePieceFromBoard,
 } from '../utils';
 import { PieceType, UpdateModeType } from '../constants';
 
@@ -23,7 +24,9 @@ const BoardActionType = {
   UPDATE_BOARD: 'UPDATE_BOARD',
   // Add/Delete piece in block
   ADD_PIECE: 'ADD_PIECE',
+  ADD_PIECE_CONFIRM: 'ADD_PIECE_CONFIRM',
   DELETE_PIECE: 'DELETE_PIECE',
+  DELETE_PIECE_CONFIRM: 'DELETE_PIECE_CONFIRM',
   TOGGLE_UPDATE_MODE: 'TOGGLE_UPDATE_MODE',
   CLOSE_UPDATE_MODE_POPUP: 'CLOSE_UPDATE_MODE_POPUP',
 };
@@ -31,6 +34,7 @@ const BoardActionType = {
 export const useBoard = (state) => {
   const [boardState, dispatch] = useReducer(boardReducer, state);
 
+  // Main funcs are bellow
   const handleUpdateBoard = useCallback((newBoard) => {
     dispatch({
       type: BoardActionType.UPDATE_BOARD,
@@ -105,6 +109,7 @@ export const useBoard = (state) => {
     }
   }, []);
 
+  // Update mode funcs are bellow
   const handleToggleUpdateMode = () => {
     dispatch({
       type: BoardActionType.TOGGLE_UPDATE_MODE,
@@ -138,6 +143,18 @@ export const useBoard = (state) => {
     }
   };
 
+  const handleDeletePiece = useCallback(() => {
+    dispatch({
+      type: BoardActionType.DELETE_PIECE_CONFIRM,
+    });
+  }, []);
+
+  const handleAddPiece = useCallback(() => {
+    dispatch({
+      type: BoardActionType.ADD_PIECE_CONFIRM,
+    });
+  }, []);
+
   return {
     boardState,
     handleClick,
@@ -146,6 +163,8 @@ export const useBoard = (state) => {
     handleActionModeClick,
     handleToggleUpdateMode,
     handleCloseUpdateModePopup,
+    handleDeletePiece,
+    handleAddPiece,
   };
 };
 
@@ -173,6 +192,16 @@ function boardReducer(state, action) {
           block,
         },
       };
+    case BoardActionType.ADD_PIECE_CONFIRM:
+      return {
+        ...state,
+        updateModePopup: {
+          open: false,
+          isAdd: false,
+          updateMode: null,
+          block: null,
+        },
+      };
     // Delete piece
     case BoardActionType.DELETE_PIECE:
       return {
@@ -182,6 +211,18 @@ function boardReducer(state, action) {
           isAdd: false,
           updateMode,
           block,
+        },
+      };
+    case BoardActionType.DELETE_PIECE_CONFIRM:
+      newState = deletePieceFromBoard(state);
+      return {
+        ...state,
+        ...newState,
+        updateModePopup: {
+          open: false,
+          isAdd: false,
+          updateMode: null,
+          block: null,
         },
       };
     // Close update mode popup modal
