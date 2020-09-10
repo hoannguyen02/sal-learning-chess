@@ -21,10 +21,11 @@ const BoardActionType = {
   EN_PASSANT_CAPTURE: 'EN_PASSANT_CAPTURE',
   PROMOTION: 'PROMOTION',
   UPDATE_BOARD: 'UPDATE_BOARD',
-  // Add/Update/Delete piece in block
+  // Add/Delete piece in block
   ADD_PIECE: 'ADD_PIECE',
   DELETE_PIECE: 'DELETE_PIECE',
   TOGGLE_UPDATE_MODE: 'TOGGLE_UPDATE_MODE',
+  CLOSE_UPDATE_MODE_POPUP: 'CLOSE_UPDATE_MODE_POPUP',
 };
 
 export const useBoard = (state) => {
@@ -110,13 +111,27 @@ export const useBoard = (state) => {
     });
   };
 
+  const handleCloseUpdateModePopup = () => {
+    dispatch({
+      type: BoardActionType.CLOSE_UPDATE_MODE_POPUP,
+    });
+  };
+
   const handleActionModeClick = (mode, block) => {
     switch (mode) {
       case UpdateModeType.ADD:
-        debugger;
+        dispatch({
+          type: BoardActionType.ADD_PIECE,
+          block,
+          updateMode: mode,
+        });
         break;
       case UpdateModeType.DELETE:
-        debugger;
+        dispatch({
+          type: BoardActionType.DELETE_PIECE,
+          updateMode: mode,
+          block,
+        });
         break;
       default:
         break;
@@ -130,12 +145,13 @@ export const useBoard = (state) => {
     handleUpdateBoard,
     handleActionModeClick,
     handleToggleUpdateMode,
+    handleCloseUpdateModePopup,
   };
 };
 
 // Board reducer
 function boardReducer(state, action) {
-  const { type, block, newBoard } = action;
+  const { type, block, newBoard, updateMode } = action;
   const {
     currentBlock,
     isWhitePlayOnly,
@@ -146,6 +162,39 @@ function boardReducer(state, action) {
 
   let newState;
   switch (type) {
+    // Add piece
+    case BoardActionType.ADD_PIECE:
+      return {
+        ...state,
+        updateModePopup: {
+          open: true,
+          isAdd: true,
+          updateMode,
+          block,
+        },
+      };
+    // Delete piece
+    case BoardActionType.DELETE_PIECE:
+      return {
+        ...state,
+        updateModePopup: {
+          open: true,
+          isAdd: false,
+          updateMode,
+          block,
+        },
+      };
+    // Close update mode popup modal
+    case BoardActionType.CLOSE_UPDATE_MODE_POPUP:
+      return {
+        ...state,
+        updateModePopup: {
+          open: false,
+          isAdd: false,
+          updateMode: null,
+          block: null,
+        },
+      };
     // Toggle update mode
     case BoardActionType.TOGGLE_UPDATE_MODE:
       const { isUpdateModeOpened } = state;
@@ -157,7 +206,7 @@ function boardReducer(state, action) {
         ...newState,
         isUpdateModeOpened: !isUpdateModeOpened,
       };
-    // Main
+    // Main cases are bellow
     case BoardActionType.UPDATE_BOARD:
       return {
         ...state,

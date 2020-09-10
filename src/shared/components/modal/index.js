@@ -9,7 +9,7 @@ const Modal = (props) => {
   const handleKeydown = useCallback((e) => {
     const { onClose } = props;
     if (e.keyCode === 27) {
-      !disabled && onClose && onClose();
+      !disabled && onClose();
     }
   }, []);
 
@@ -22,7 +22,7 @@ const Modal = (props) => {
 
   return (
     <div className="root">
-      <Backdrop open={open} onClick={onClose} />
+      <Backdrop open={open} onClick={!disabled && onClose} />
       <Overlay {...props} />
     </div>
   );

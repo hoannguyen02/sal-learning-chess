@@ -2,7 +2,7 @@ import React from 'react';
 import './overlay.scss';
 
 const Overlay = (props) => {
-  const { title, onClose, children, footer, open, onSubmit } = props;
+  const { title, onClose, children, footer, open, onSubmit, disabled } = props;
   const handleSubmit = (event) => {
     onSubmit && onSubmit(event);
     event.preventDefault();
@@ -13,7 +13,11 @@ const Overlay = (props) => {
       <div className="modal__content">
         <div className="modal__header">
           {title && <h5 className="modal__title">{title}</h5>}
-          <button type="button" className="close" onClick={onClose}>
+          <button
+            type="button"
+            className="close"
+            onClick={!disabled && onClose}
+          >
             ×
           </button>
         </div>

@@ -6,6 +6,7 @@ import PromotionPopup from './promotion-popup';
 import VerticalCaption from './vertical-caption';
 import HorizontalCaption from './horizontal-caption';
 import { useBoard } from '../../hooks';
+import UpdateModePopup from './update-mode-popup';
 
 const Board = (props) => {
   const { board: newBoard, updateMode } = props;
@@ -16,6 +17,7 @@ const Board = (props) => {
     handleUpdateBoard,
     handleActionModeClick,
     handleToggleUpdateMode,
+    handleCloseUpdateModePopup,
   } = useBoard({
     board: null,
     currentBlock: null,
@@ -29,6 +31,12 @@ const Board = (props) => {
     isWhitePlayOnly: props.isWhitePlayOnly,
     isCastlingMove: false,
     isUpdateModeOpened: false,
+    updateModePopup: {
+      open: false,
+      isAdd: false,
+      updateMode: null,
+      block: null,
+    },
   });
   useEffect(() => {
     newBoard && handleUpdateBoard(newBoard, isUpdateModeOpened);
@@ -39,6 +47,7 @@ const Board = (props) => {
     isWhiteNext,
     promotionForPawn,
     isUpdateModeOpened,
+    updateModePopup,
   } = boardState;
 
   return board && Array.isArray(board) && board.length > 0 ? (
@@ -75,6 +84,12 @@ const Board = (props) => {
         <button className="update-mode" onClick={handleToggleUpdateMode}>
           Update Mode
         </button>
+      )}
+      {updateModePopup && updateModePopup.open && (
+        <UpdateModePopup
+          {...updateModePopup}
+          onClose={handleCloseUpdateModePopup}
+        />
       )}
     </div>
   ) : (
