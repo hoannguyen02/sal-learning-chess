@@ -16,3 +16,5 @@ export * from './is-en-passant';
 export * from './handle-en-passant-capture';
 export * from './is-en-passant';
 export * from './initial-pieces';
+export * from './handle-enable-blocks';
+export * from './handle-disable-blocks';

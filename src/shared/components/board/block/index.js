@@ -8,7 +8,6 @@ const Block = (props) => {
     onClick,
     whiteClass,
     block,
-    index,
     onActionModeClick,
     isUpdateModeOpened,
   } = props;
@@ -20,7 +19,7 @@ const Block = (props) => {
       } ${block.catchHighLight ? 'capture-high-light' : ''} ${
         block.castlingHighLight ? 'castling-high-light' : ''
       }`}
-      onClick={() => onClick(block)}
+      onClick={() => !isUpdateModeOpened && onClick(block)}
       disabled={block.disabled}
       style={{ opacity: block.opacity }}
     >
@@ -32,7 +31,10 @@ const Block = (props) => {
         />
       )}
       {isUpdateModeOpened && (
-        <Action piece={block.piece} index={index} onClick={onActionModeClick} />
+        <Action
+          piece={block.piece}
+          onClick={(mode) => onActionModeClick(mode, block)}
+        />
       )}
     </button>
   );
