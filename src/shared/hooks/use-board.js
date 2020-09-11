@@ -10,6 +10,7 @@ import {
   handleDisableBlocks,
   handleEnableBlocks,
   deletePieceFromBoard,
+  addPieceToBoard,
 } from '../utils';
 import { PieceType, UpdateModeType } from '../constants';
 
@@ -149,9 +150,11 @@ export const useBoard = (state) => {
     });
   }, []);
 
-  const handleAddPiece = useCallback(() => {
+  const handleAddPiece = useCallback((pieceType, isWhitePlayer) => {
     dispatch({
       type: BoardActionType.ADD_PIECE_CONFIRM,
+      pieceType,
+      isWhitePlayer,
     });
   }, []);
 
@@ -170,7 +173,14 @@ export const useBoard = (state) => {
 
 // Board reducer
 function boardReducer(state, action) {
-  const { type, block, newBoard, updateMode } = action;
+  const {
+    type,
+    block,
+    newBoard,
+    updateMode,
+    pieceType,
+    isWhitePlayer,
+  } = action;
   const {
     currentBlock,
     isWhitePlayOnly,
@@ -193,8 +203,10 @@ function boardReducer(state, action) {
         },
       };
     case BoardActionType.ADD_PIECE_CONFIRM:
+      newState = addPieceToBoard(state, pieceType, isWhitePlayer);
       return {
         ...state,
+        ...newState,
         updateModePopup: {
           open: false,
           isAdd: false,
