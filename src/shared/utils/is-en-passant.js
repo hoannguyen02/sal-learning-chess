@@ -14,6 +14,6 @@ function isEnPassant(board, position, isWhite) {
     piece &&
     piece.type === PieceType.PAWN &&
     piece.isWhite !== isWhite &&
-    piece.enPassant
+    piece.canBeEnPassantCapture
   );
 }

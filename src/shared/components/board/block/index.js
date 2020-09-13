@@ -11,7 +11,8 @@ const Block = (props) => {
     onActionModeClick,
     isUpdateModeOpened,
   } = props;
-  const enPassant = block.piece && block.piece.enPassant;
+  const canBeEnPassantCapture =
+    block.piece && block.piece.canBeEnPassantCapture;
   return (
     <button
       className={`chess-block block-base ${whiteClass} ${
@@ -27,7 +28,7 @@ const Block = (props) => {
         <PieceIcon
           type={block.piece.type}
           isWhite={block.piece.isWhite}
-          enPassant={enPassant}
+          canBeEnPassantCapture={canBeEnPassantCapture}
         />
       )}
       {isUpdateModeOpened && (

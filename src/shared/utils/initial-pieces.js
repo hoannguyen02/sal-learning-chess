@@ -12,7 +12,7 @@ function initialPawnPieces(isWhite) {
     isWhite: isWhite,
     position: [isWhite ? 6 : 1, item],
     line: 1,
-    enPassant: false,
+    canBeEnPassantCapture: false,
     type: PieceType.PAWN,
   }));
 }

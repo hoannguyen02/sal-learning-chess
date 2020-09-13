@@ -1,5 +1,6 @@
 import { PieceType } from '../constants';
 import { findIndexInBoard } from './find-index-in-board';
+import { getEnPassantStatus } from './get-en-passant-status';
 export { movePiece };
 
 function movePiece(state) {
@@ -9,7 +10,7 @@ function movePiece(state) {
   const { position: newPos } = newBlock;
   // Check following steps to update information for piece
   // Update new position
-  // Update line number, enPassant state in case Pawn piece
+  // Update line number, canBeEnPassantCapture state in case Pawn piece
   // Update isMoved state incase Rook or King in order to check castling move later on
   const newIndex = findIndexInBoard(board, newPos[0], newPos[1]);
   piece.position = newPos;
@@ -18,7 +19,12 @@ function movePiece(state) {
       const lineNumber = isWhiteNext ? 8 - newPos[0] : newPos[0] + 1;
       piece.line = lineNumber;
       newBoard = resetEnPassantStatus({ board, isWhite: !isWhite });
-      piece.enPassant = isEnPassant(board, lineNumber, newPos, isWhiteNext);
+      piece.canBeEnPassantCapture = getEnPassantStatus(
+        board,
+        lineNumber,
+        newPos,
+        isWhiteNext
+      );
       break;
     case PieceType.ROOK:
     case PieceType.KING:
@@ -39,33 +45,10 @@ function movePiece(state) {
   };
 }
 
-function isEnPassant(board, lineNumber, newPosition, isWhite) {
-  if (lineNumber !== 4) {
-    return false;
-  }
-  const [x, y] = newPosition;
-  // Check if any pawns can capture by en passant rules
-  return (
-    [
-      [x, y - 1],
-      [x, y + 1],
-    ].filter(([x, y]) => {
-      const newIndex = findIndexInBoard(board, x, y);
-      if (newIndex === -1) {
-        return false;
-      }
-      const { piece } = board[newIndex];
-      return (
-        piece && piece.type === PieceType.PAWN && piece.isWhite !== isWhite
-      );
-    }).length > 0
-  );
-}
-
 function resetEnPassantStatus({ board, isWhite }) {
   return board.map((block) => {
     const { piece } = block;
-    // Reset enPassant state to false if those are at third line
+    // Reset canBeEnPassantCapture state to false if those are at third line
     if (
       piece &&
       isWhite === piece.isWhite &&
@@ -74,7 +57,9 @@ function resetEnPassantStatus({ board, isWhite }) {
     ) {
       return {
         ...block,
-        ...(piece && { piece: { ...block.piece, enPassant: false } }),
+        ...(piece && {
+          piece: { ...block.piece, canBeEnPassantCapture: false },
+        }),
       };
     }
     return block;

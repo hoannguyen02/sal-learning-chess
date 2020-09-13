@@ -12,14 +12,18 @@ import WhiteBishop from './WhiteBishop';
 import BlackBishop from './BlackBishop';
 import Pawn from './Pawn';
 
-const PieceIcon = ({ type, isWhite, enPassant }) => {
+const PieceIcon = ({ type, isWhite, canBeEnPassantCapture }) => {
   switch (type) {
     case PieceType.KING:
       return isWhite ? <WhiteKing /> : <BlackKing />;
     case PieceType.QUEEN:
       return isWhite ? <WhiteQueen /> : <BlackQueen />;
     case PieceType.PAWN:
-      return <Pawn fill={enPassant ? '#e86666' : isWhite ? '#fff' : '#000'} />;
+      return (
+        <Pawn
+          fill={canBeEnPassantCapture ? '#e86666' : isWhite ? '#fff' : '#000'}
+        />
+      );
     case PieceType.KNIGHT:
       return isWhite ? <WhiteKnight /> : <BlackKnight />;
     case PieceType.ROOK:

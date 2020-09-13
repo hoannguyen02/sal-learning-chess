@@ -1,6 +1,6 @@
 import { PieceType } from '../constants';
 import { findIndexInBoard } from './find-index-in-board';
-
+import { getEnPassantStatus } from './get-en-passant-status';
 export { addPieceToBoard };
 
 function addPieceToBoard(state, pieceType, isWhitePlayer) {
@@ -25,7 +25,7 @@ function addPieceToBoard(state, pieceType, isWhitePlayer) {
       piece = generateKnightPiece(x, y, isWhitePlayer);
       break;
     case PieceType.PAWN:
-      piece = generatePawnPiece(x, y, isWhitePlayer);
+      piece = generatePawnPiece(x, y, isWhitePlayer, board);
       break;
 
     default:
@@ -41,14 +41,24 @@ function addPieceToBoard(state, pieceType, isWhitePlayer) {
   };
 }
 
-function generatePawnPiece(x, y, isWhitePlayer) {
+function generatePawnPiece(x, y, isWhitePlayer, board) {
+  const lineNumber = getLine(x, isWhitePlayer);
   return {
     isWhite: isWhitePlayer,
     position: [x, y],
-    line: 1, // it depends on x, y
-    enPassant: false,
+    line: lineNumber,
+    canBeEnPassantCapture: getEnPassantStatus(
+      board,
+      lineNumber,
+      [x, y],
+      isWhitePlayer
+    ),
     type: PieceType.PAWN,
   };
+}
+
+function getLine(x, isWhitePlayer) {
+  return isWhitePlayer ? 8 - x : x + 1;
 }
 
 function generateKnightPiece(x, y, isWhitePlayer) {
