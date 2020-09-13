@@ -20,3 +20,4 @@ export * from './handle-enable-blocks';
 export * from './handle-disable-blocks';
 export * from './delete-piece-from-board';
 export * from './add-piece-to-board';
+export * from './get-piece-types';

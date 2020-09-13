@@ -93,6 +93,7 @@ const Board = (props) => {
           onClose={handleCloseUpdateModePopup}
           onAdd={handleAddPiece}
           onDelete={handleDeletePiece}
+          board={board}
         />
       )}
     </div>

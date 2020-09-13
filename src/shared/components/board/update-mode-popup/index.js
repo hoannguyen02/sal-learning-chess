@@ -1,6 +1,6 @@
 import Modal from '../../modal';
 import Dropdown from '../../dropdown';
-import { PieceType } from '../../../constants';
+import { getPieceTypes } from '../../../utils';
 import React, { useCallback, useState, useMemo } from 'react';
 
 const PlayerType = {
@@ -9,23 +9,26 @@ const PlayerType = {
 };
 
 const UpdateModePopup = (props) => {
-  const options = useMemo(() => {
-    return [
-      PieceType.ROOK,
-      PieceType.BISHOP,
-      PieceType.QUEEN,
-      PieceType.KING,
-      PieceType.KNIGHT,
-      PieceType.PAWN,
-    ];
-  }, []);
+  const {
+    isAdd,
+    open,
+    onClose,
+    block,
+    onAdd,
+    onDelete,
+    disabled,
+    board,
+  } = props;
 
   const players = useMemo(() => {
     return [PlayerType.WHITE, PlayerType.BLACK];
   }, []);
-
-  const [currentPieceType, setCurrentPieceType] = useState(options[0]);
   const [currentPlayer, setCurrentPlayer] = useState(players[0]);
+
+  const options = useMemo(() => {
+    return getPieceTypes(board, currentPlayer);
+  }, [currentPlayer, board]);
+  const [currentPieceType, setCurrentPieceType] = useState(options[0]);
 
   const handleSelectPieceType = useCallback((type) => {
     setCurrentPieceType(type);
@@ -35,7 +38,6 @@ const UpdateModePopup = (props) => {
     setCurrentPlayer(player);
   }, []);
 
-  const { isAdd, open, onClose, block, onAdd, onDelete, disabled } = props;
   return isAdd ? (
     <Modal open={open} onClose={onClose} disabled={disabled}>
       <Dropdown
@@ -60,8 +62,8 @@ const UpdateModePopup = (props) => {
     </Modal>
   ) : (
     <Modal open={open} onClose={onClose} disabled={disabled}>
-      Are you sure you want to delete the {block.piece.type} at {block.caption}?
-      <button onClick={!disabled && onDelete}>ok</button>
+      Are you sure you want to delete the {block.piece.type} at{' '}
+      <b>{block.caption}</b>?<button onClick={!disabled && onDelete}>ok</button>
     </Modal>
   );
 };
