@@ -48,6 +48,11 @@
   &:disabled {
     cursor: not-allowed;
   }
+  &.block-update-mode {
+    svg {
+      opacity: 0.1;
+    }
+  }
   svg {
     position: absolute;
     top: 0;

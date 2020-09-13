@@ -18,7 +18,7 @@ const Block = (props) => {
         block.highLight ? 'high-light' : ''
       } ${block.catchHighLight ? 'capture-high-light' : ''} ${
         block.castlingHighLight ? 'castling-high-light' : ''
-      }`}
+      } ${isUpdateModeOpened && block.piece ? 'block-update-mode' : ''}`}
       onClick={() => !isUpdateModeOpened && onClick(block)}
       disabled={block.disabled}
       style={{ opacity: block.opacity }}
