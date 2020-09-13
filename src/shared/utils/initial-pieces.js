@@ -1,6 +1,12 @@
 import { PieceType } from '../constants/piece-type';
 
-export { initialPawnPieces, initialBlacks, initialWhites };
+export {
+  initialPawnPieces,
+  initialBlacks,
+  initialWhites,
+  initialRooks,
+  initialWhiteRooks,
+};
 function initialPawnPieces(isWhite) {
   return [0, 1, 2, 3, 4, 5, 6, 7].map((item) => ({
     isWhite: isWhite,
@@ -16,8 +22,7 @@ function initialBlacks() {
     // Pawn
     ...initialPawnPieces(false),
     // Rook
-    { isWhite: false, position: [0, 0], type: PieceType.ROOK, isMoved: false },
-    { isWhite: false, position: [0, 7], type: PieceType.ROOK, isMoved: false },
+    ...initialBlackRooks(),
     // Knight
     { isWhite: false, position: [0, 1], type: PieceType.KNIGHT },
     { isWhite: false, position: [0, 6], type: PieceType.KNIGHT },
@@ -36,8 +41,7 @@ function initialWhites() {
     // Pawn
     ...initialPawnPieces(true),
     // Rook
-    { isWhite: true, position: [7, 0], type: PieceType.ROOK, isMoved: false },
-    { isWhite: true, position: [7, 7], type: PieceType.ROOK, isMoved: false },
+    ...initialWhiteRooks(true),
     // Knight
     { isWhite: true, position: [7, 1], type: PieceType.KNIGHT },
     { isWhite: true, position: [7, 6], type: PieceType.KNIGHT },
@@ -48,5 +52,43 @@ function initialWhites() {
     { isWhite: true, position: [7, 3], type: PieceType.QUEEN },
     // King
     { isWhite: true, position: [7, 4], type: PieceType.KING, isMoved: false },
+  ];
+}
+
+function initialRooks() {
+  return [...initialWhiteRooks(true), ...initialBlackRooks(false)];
+}
+
+function initialWhiteRooks(isWhite, isMoved) {
+  return [
+    {
+      isWhite,
+      position: [7, 0],
+      type: PieceType.ROOK,
+      isMoved: isMoved || false,
+    },
+    {
+      isWhite,
+      position: [7, 7],
+      type: PieceType.ROOK,
+      isMoved: isMoved || false,
+    },
+  ];
+}
+
+function initialBlackRooks(isWhite, isMoved) {
+  return [
+    {
+      isWhite,
+      position: [0, 0],
+      type: PieceType.ROOK,
+      isMoved: isMoved || false,
+    },
+    {
+      isWhite,
+      position: [0, 7],
+      type: PieceType.ROOK,
+      isMoved: isMoved || false,
+    },
   ];
 }

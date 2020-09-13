@@ -7,27 +7,27 @@ import {
   initialPawnPieces,
   initialBlacks,
   initialWhites,
+  initialRooks,
+  initialWhiteRooks,
 } from '../../shared/utils';
 
 const RookType = {
-  NO_BLOCK: 'NO_BLOCK',
-  BLOCK_BY_WHITES: 'BLOCK_BY_WHITES',
-  BLOCK_BY_BLACKS: 'BLOCK_BY_BLACKS',
+  ROOK_ONLY: 'ROOK_ONLY',
+  FULL_PIECES: 'FULL_PIECES',
   CASTLING: 'CASTLING',
   UPDATE_BOARD: 'UPDATE_BOARD',
 };
 
 const MENU_ACTIONS = [
-  { title: 'Rook with empty board', value: RookType.NO_BLOCK },
-  { title: 'Rook block by white pieces', value: RookType.BLOCK_BY_WHITES },
-  { title: 'Rook block by black pieces', value: RookType.BLOCK_BY_BLACKS },
+  { title: 'Rook Only', value: RookType.ROOK_ONLY },
+  { title: 'Full Pieces', value: RookType.FULL_PIECES },
   { title: 'Castling', value: RookType.CASTLING },
 ];
 
 const TheRook = () => {
   const [state, dispatch] = useReducer(theRookReducer, {
     currentMenu: MENU_ACTIONS[0],
-    pieces: getDefaultWhites(),
+    pieces: initialRooks(),
     board: null,
   });
 
@@ -43,15 +43,9 @@ const TheRook = () => {
 
   const handleClick = (menu) => {
     switch (menu.value) {
-      case RookType.BLOCK_BY_WHITES:
+      case RookType.FULL_PIECES:
         dispatch({
-          type: RookType.BLOCK_BY_WHITES,
-          currentMenu: menu,
-        });
-        break;
-      case RookType.BLOCK_BY_BLACKS:
-        dispatch({
-          type: RookType.BLOCK_BY_BLACKS,
+          type: RookType.FULL_PIECES,
           currentMenu: menu,
         });
         break;
@@ -64,7 +58,7 @@ const TheRook = () => {
 
       default:
         dispatch({
-          type: RookType.NO_BLOCK,
+          type: RookType.ROOK_ONLY,
           currentMenu: menu,
         });
         break;
@@ -92,14 +86,12 @@ function theRookReducer(state, action) {
   switch (type) {
     case RookType.UPDATE_BOARD:
       return { ...state, board: newBoard };
-    case RookType.NO_BLOCK:
-      return { board: null, currentMenu, pieces: getDefaultWhites() };
-    case RookType.BLOCK_BY_WHITES:
-      return { board: null, pieces: initialWhites(), currentMenu };
-    case RookType.BLOCK_BY_BLACKS:
+    case RookType.ROOK_ONLY:
+      return { board: null, currentMenu, pieces: initialRooks() };
+    case RookType.FULL_PIECES:
       return {
         board: null,
-        pieces: [...initialBlacks(), ...getDefaultWhites()],
+        pieces: [...initialWhites(), ...initialBlacks()],
         currentMenu,
       };
     case RookType.CASTLING:
@@ -108,35 +100,18 @@ function theRookReducer(state, action) {
         currentMenu,
         pieces: [
           ...initialPawnPieces(true),
-          {
-            isWhite: true,
-            position: [7, 0],
-            type: PieceType.ROOK,
-            isMoved: false,
-          },
-          {
-            isWhite: true,
-            position: [7, 7],
-            type: PieceType.ROOK,
-            isMoved: false,
-          },
+          ...initialWhiteRooks(true),
           {
             isWhite: true,
             position: [7, 4],
             type: PieceType.KING,
             isMoved: false,
           },
+          ...initialBlacks(),
         ],
       };
 
     default:
       return state;
   }
-}
-
-function getDefaultWhites() {
-  return [
-    { isWhite: true, position: [7, 0], type: PieceType.ROOK, isMoved: false },
-    { isWhite: true, position: [7, 7], type: PieceType.ROOK, isMoved: false },
-  ];
 }
