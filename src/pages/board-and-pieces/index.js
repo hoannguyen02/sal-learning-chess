@@ -14,6 +14,7 @@ const MENU_ACTIONS = [
   PieceType.PAWN,
   PieceType.KNIGHT,
   PieceType.KING,
+  PieceType.QUEEN,
   PieceType.BISHOP,
   PieceType.ROOK,
 ]

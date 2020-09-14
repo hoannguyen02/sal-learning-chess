@@ -4,8 +4,11 @@ export {
   initialPawnPieces,
   initialBlacks,
   initialWhites,
-  initialRooks,
   initialWhiteRooks,
+  initialWhiteBishops,
+  initialWhiteKnights,
+  initialQueen,
+  initialKing,
 };
 function initialPawnPieces(isWhite) {
   return [0, 1, 2, 3, 4, 5, 6, 7].map((item) => ({
@@ -24,15 +27,13 @@ function initialBlacks() {
     // Rook
     ...initialBlackRooks(),
     // Knight
-    { isWhite: false, position: [0, 1], type: PieceType.KNIGHT },
-    { isWhite: false, position: [0, 6], type: PieceType.KNIGHT },
+    ...initialBlackKnights(),
     // Bishop
-    { isWhite: false, position: [0, 2], type: PieceType.BISHOP },
-    { isWhite: false, position: [0, 5], type: PieceType.BISHOP },
+    ...initialBlackBishops(),
     // Queen
-    { isWhite: false, position: [0, 3], type: PieceType.QUEEN },
+    initialQueen(false),
     // King
-    { isWhite: false, position: [0, 4], type: PieceType.KING, isMoved: false },
+    initialKing(false),
   ];
 }
 
@@ -41,34 +42,64 @@ function initialWhites() {
     // Pawn
     ...initialPawnPieces(true),
     // Rook
-    ...initialWhiteRooks(true),
+    ...initialWhiteRooks(),
     // Knight
-    { isWhite: true, position: [7, 1], type: PieceType.KNIGHT },
-    { isWhite: true, position: [7, 6], type: PieceType.KNIGHT },
+    ...initialWhiteKnights(),
     // Bishop
-    { isWhite: true, position: [7, 2], type: PieceType.BISHOP },
-    { isWhite: true, position: [7, 5], type: PieceType.BISHOP },
+    ...initialWhiteBishops(),
     // Queen
-    { isWhite: true, position: [7, 3], type: PieceType.QUEEN },
+    initialQueen(true),
     // King
-    { isWhite: true, position: [7, 4], type: PieceType.KING, isMoved: false },
+    initialKing(true),
   ];
 }
 
-function initialRooks() {
-  return [...initialWhiteRooks(true), ...initialBlackRooks(false)];
+function initialKing(isWhite) {
+  return { isWhite, position: [isWhite ? 7 : 0, 4], type: PieceType.KING };
 }
 
-function initialWhiteRooks(isWhite, isMoved) {
+function initialQueen(isWhite) {
+  return { isWhite, position: [isWhite ? 7 : 0, 3], type: PieceType.QUEEN };
+}
+
+function initialWhiteKnights() {
+  return [
+    { isWhite: true, position: [7, 1], type: PieceType.KNIGHT },
+    { isWhite: true, position: [7, 6], type: PieceType.KNIGHT },
+  ];
+}
+
+function initialBlackKnights() {
+  return [
+    { isWhite: false, position: [0, 1], type: PieceType.KNIGHT },
+    { isWhite: false, position: [0, 6], type: PieceType.KNIGHT },
+  ];
+}
+
+function initialBlackBishops() {
+  return [
+    { isWhite: false, position: [0, 2], type: PieceType.BISHOP },
+    { isWhite: false, position: [0, 5], type: PieceType.BISHOP },
+  ];
+}
+
+function initialWhiteBishops() {
+  return [
+    { isWhite: true, position: [7, 2], type: PieceType.BISHOP },
+    { isWhite: true, position: [7, 5], type: PieceType.BISHOP },
+  ];
+}
+
+function initialWhiteRooks(isMoved) {
   return [
     {
-      isWhite,
+      isWhite: true,
       position: [7, 0],
       type: PieceType.ROOK,
       isMoved: isMoved || false,
     },
     {
-      isWhite,
+      isWhite: true,
       position: [7, 7],
       type: PieceType.ROOK,
       isMoved: isMoved || false,
@@ -76,16 +107,16 @@ function initialWhiteRooks(isWhite, isMoved) {
   ];
 }
 
-function initialBlackRooks(isWhite, isMoved) {
+function initialBlackRooks(isMoved) {
   return [
     {
-      isWhite,
+      isWhite: false,
       position: [0, 0],
       type: PieceType.ROOK,
       isMoved: isMoved || false,
     },
     {
-      isWhite,
+      isWhite: false,
       position: [0, 7],
       type: PieceType.ROOK,
       isMoved: isMoved || false,

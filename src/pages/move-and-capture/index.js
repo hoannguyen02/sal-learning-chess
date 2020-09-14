@@ -5,28 +5,37 @@ import { PieceType } from '../../shared/constants';
 import {
   updateBoard,
   initialBlacks,
-  initialWhites,
-  initialRooks,
   initialWhiteRooks,
+  initialWhiteBishops,
+  initialQueen,
+  initialKing,
+  initialWhiteKnights,
+  initialPawnPieces,
 } from '../../shared/utils';
 
-const RookType = {
-  ROOK_ONLY: 'ROOK_ONLY',
-  FULL_PIECES: 'FULL_PIECES',
-  CASTLING: 'CASTLING',
+const MoveAndCaptureType = {
+  THE_ROOK: 'ROOK',
+  THE_BISHOP: 'BISHOP',
+  THE_QUEEN: 'QUEEN',
+  THE_KING: 'KING',
+  THE_KNIGHT: 'KNIGHT',
+  THE_PAWN: 'PAWN',
   UPDATE_BOARD: 'UPDATE_BOARD',
 };
 
 const MENU_ACTIONS = [
-  { title: 'Rook Only', value: RookType.ROOK_ONLY },
-  { title: 'Full Pieces', value: RookType.FULL_PIECES },
-  { title: 'Castling', value: RookType.CASTLING },
-];
+  PieceType.ROOK,
+  PieceType.BISHOP,
+  PieceType.QUEEN,
+  PieceType.KING,
+  PieceType.KNIGHT,
+  PieceType.PAWN,
+].map((item) => ({ title: `The ${item}`, value: item }));
 
 const TheRook = () => {
   const [state, dispatch] = useReducer(theRookReducer, {
     currentMenu: MENU_ACTIONS[0],
-    pieces: initialRooks(),
+    pieces: [...initialWhiteRooks(), ...initialBlacks()],
     board: null,
   });
 
@@ -34,7 +43,7 @@ const TheRook = () => {
     if (state.pieces) {
       const newBoard = updateBoard(state.pieces, true, true, true);
       dispatch({
-        type: RookType.UPDATE_BOARD,
+        type: MoveAndCaptureType.UPDATE_BOARD,
         newBoard,
       });
     }
@@ -42,22 +51,40 @@ const TheRook = () => {
 
   const handleClick = (menu) => {
     switch (menu.value) {
-      case RookType.FULL_PIECES:
+      case MoveAndCaptureType.THE_BISHOP:
         dispatch({
-          type: RookType.FULL_PIECES,
+          type: MoveAndCaptureType.THE_BISHOP,
           currentMenu: menu,
         });
         break;
-      case RookType.CASTLING:
+      case MoveAndCaptureType.THE_QUEEN:
         dispatch({
-          type: RookType.CASTLING,
+          type: MoveAndCaptureType.THE_QUEEN,
+          currentMenu: menu,
+        });
+        break;
+      case MoveAndCaptureType.THE_KING:
+        dispatch({
+          type: MoveAndCaptureType.THE_KING,
+          currentMenu: menu,
+        });
+        break;
+      case MoveAndCaptureType.THE_KNIGHT:
+        dispatch({
+          type: MoveAndCaptureType.THE_KNIGHT,
+          currentMenu: menu,
+        });
+        break;
+      case MoveAndCaptureType.THE_PAWN:
+        dispatch({
+          type: MoveAndCaptureType.THE_PAWN,
           currentMenu: menu,
         });
         break;
 
       default:
         dispatch({
-          type: RookType.ROOK_ONLY,
+          type: MoveAndCaptureType.THE_ROOK,
           currentMenu: menu,
         });
         break;
@@ -83,30 +110,43 @@ export default TheRook;
 function theRookReducer(state, action) {
   const { type, currentMenu, newBoard } = action;
   switch (type) {
-    case RookType.UPDATE_BOARD:
+    case MoveAndCaptureType.UPDATE_BOARD:
       return { ...state, board: newBoard };
-    case RookType.ROOK_ONLY:
-      return { board: null, currentMenu, pieces: initialRooks() };
-    case RookType.FULL_PIECES:
+    case MoveAndCaptureType.THE_ROOK:
       return {
         board: null,
-        pieces: [...initialWhites(), ...initialBlacks()],
         currentMenu,
+        pieces: [...initialWhiteRooks(), ...initialBlacks()],
       };
-    case RookType.CASTLING:
+    case MoveAndCaptureType.THE_BISHOP:
       return {
         board: null,
         currentMenu,
-        pieces: [
-          ...initialWhiteRooks(true),
-          {
-            isWhite: true,
-            position: [7, 4],
-            type: PieceType.KING,
-            isMoved: false,
-          },
-          ...initialBlacks(),
-        ],
+        pieces: [...initialWhiteBishops(), ...initialBlacks()],
+      };
+    case MoveAndCaptureType.THE_QUEEN:
+      return {
+        board: null,
+        currentMenu,
+        pieces: [initialQueen(true), ...initialBlacks()],
+      };
+    case MoveAndCaptureType.THE_KING:
+      return {
+        board: null,
+        currentMenu,
+        pieces: [initialKing(true), ...initialBlacks()],
+      };
+    case MoveAndCaptureType.THE_KNIGHT:
+      return {
+        board: null,
+        currentMenu,
+        pieces: [...initialWhiteKnights(), ...initialBlacks()],
+      };
+    case MoveAndCaptureType.THE_PAWN:
+      return {
+        board: null,
+        currentMenu,
+        pieces: [...initialPawnPieces(true), ...initialBlacks()],
       };
 
     default:
