@@ -5,6 +5,7 @@ const Menus = [
   { title: 'Move and Capture', url: 'move-and-capture' },
   { title: 'Principles', url: 'principles' },
   { title: 'Strategies ', url: 'strategies' },
+  { title: 'Practices ', url: 'practices' },
 ];
 
 const Home = () => {

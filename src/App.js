@@ -4,6 +4,7 @@ import BoardAndPieces from './pages/board-and-pieces';
 import MoveAndCapture from './pages/move-and-capture';
 import Principles from './pages/principles';
 import Strategies from './pages/strategies';
+import Practices from './pages/practices';
 
 const App = () => {
   const { pathname } = window.location;
@@ -23,6 +24,9 @@ const App = () => {
       break;
     case '/strategies':
       page = <Strategies />;
+      break;
+    case '/practices':
+      page = <Practices />;
       break;
 
     default:
