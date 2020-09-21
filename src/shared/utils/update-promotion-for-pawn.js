@@ -12,5 +12,8 @@ function updatePromotionForPawn(state) {
       },
     };
   }
-  return state;
+  return {
+    ...state,
+    movesCount: state.movesCount + 1,
+  };
 }

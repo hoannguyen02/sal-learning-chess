@@ -7,9 +7,15 @@ import VerticalCaption from './vertical-caption';
 import HorizontalCaption from './horizontal-caption';
 import { useBoard } from '../../hooks';
 import UpdateModePopup from './update-mode-popup';
+import StatusPopup from './status-popup';
 
 const Board = (props) => {
-  const { board: newBoard, updateMode } = props;
+  const {
+    board: newBoard,
+    updateMode,
+    isValidateStatus,
+    validateStatusInfo,
+  } = props;
   const {
     boardState,
     handleClick,
@@ -20,6 +26,7 @@ const Board = (props) => {
     handleCloseUpdateModePopup,
     handleDeletePiece,
     handleAddPiece,
+    validateStatus,
   } = useBoard({
     board: null,
     currentBlock: null,
@@ -39,10 +46,23 @@ const Board = (props) => {
       updateMode: null,
       block: null,
     },
+    movesCount: 0,
+    statusPopup: {
+      validateStatusInfo: null,
+      open: false,
+      isValidMoved: false,
+    },
   });
+
   useEffect(() => {
     newBoard && handleUpdateBoard(newBoard, isUpdateModeOpened);
   }, [newBoard]);
+
+  useEffect(() => {
+    if (isValidateStatus && boardState.movesCount) {
+      validateStatus(validateStatusInfo);
+    }
+  }, [boardState.movesCount]);
 
   const {
     board,
@@ -50,6 +70,7 @@ const Board = (props) => {
     promotionForPawn,
     isUpdateModeOpened,
     updateModePopup,
+    statusPopup,
   } = boardState;
 
   return board && Array.isArray(board) && board.length > 0 ? (
@@ -96,6 +117,7 @@ const Board = (props) => {
           board={board}
         />
       )}
+      {statusPopup && statusPopup.open && <StatusPopup {...statusPopup} />}
     </div>
   ) : (
     ''

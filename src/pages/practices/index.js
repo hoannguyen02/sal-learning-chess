@@ -15,6 +15,7 @@ const Practices = () => {
     board: null,
     data: null,
     menuItems: null,
+    validateStatusInfo: null,
   });
 
   // Fetching data
@@ -48,10 +49,16 @@ const Practices = () => {
     }
   };
 
-  const { board, currentMenu, menuItems } = state;
+  const { board, currentMenu, menuItems, validateStatusInfo } = state;
   return (
     <div className="board-and-pieces">
-      <Board board={board} isWhitePlayOnly updateMode />
+      <Board
+        board={board}
+        isWhitePlayOnly
+        updateMode
+        isValidateStatus
+        validateStatusInfo={validateStatusInfo}
+      />
       <MenuActions
         actions={menuItems}
         onClick={handleClick}
@@ -64,9 +71,10 @@ const Practices = () => {
 export default Practices;
 
 function practicesReducer(state, action) {
-  const { type, currentMenu, newBoard, data } = action;
+  const { type, newBoard } = action;
   switch (type) {
     case PracticesType.BINDING_DATA: {
+      const { data } = action;
       const menuItems = Object.keys(data).map((key) => {
         PracticesType[key] = key;
         return data[key].item;
@@ -78,17 +86,26 @@ function practicesReducer(state, action) {
         currentMenu: initialCurrentMenu,
         board: null,
         pieces: data[initialCurrentMenu.value].pieces,
+        validateStatusInfo: {
+          limitMoves: data[initialCurrentMenu.value].limitMoves,
+          nextBlocks: data[initialCurrentMenu.value].nextBlocks,
+        },
       };
     }
     case PracticesType.UPDATE_BOARD:
       return { ...state, board: newBoard };
     case PracticesType[type]:
+      const { currentMenu } = action;
       return {
         board: null,
         currentMenu,
         menuItems: state.menuItems,
         data: state.data,
         pieces: state.data[currentMenu.value].pieces,
+        validateStatusInfo: {
+          limitMoves: state.data[currentMenu.value].limitMoves,
+          nextBlocks: state.data[currentMenu.value].nextBlocks,
+        },
       };
 
     default:
@@ -98,6 +115,7 @@ function practicesReducer(state, action) {
         board: null,
         data: null,
         menuItems: null,
+        validateStatusInfo: null,
       };
   }
 }

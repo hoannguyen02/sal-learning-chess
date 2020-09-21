@@ -2,7 +2,6 @@ import {
   initialBlacks,
   initialQueen,
   initialWhiteBishops,
-  initialWhiteRooks,
 } from '../../shared/utils';
 
 export const FAKE_DATA = {
@@ -12,7 +11,7 @@ export const FAKE_DATA = {
       value: 'ONE_MOVES',
     },
     limitMoves: 1,
-    nextBlocks: [],
+    nextBlocks: [{ isWhite: true, position: [0, 1], type: 'KNIGHT' }],
     pieces: [
       {
         isWhite: false,
@@ -117,6 +116,8 @@ export const FAKE_DATA = {
       title: 'TWO MOVES',
       value: 'TWO_MOVES',
     },
+    limitMoves: 2,
+    nextBlocks: [],
     pieces: [...initialWhiteBishops(), ...initialBlacks()],
   },
   THREE_MOVES: {
@@ -124,6 +125,8 @@ export const FAKE_DATA = {
       title: 'THREE MOVES',
       value: 'THREE_MOVES',
     },
+    limitMoves: 3,
+    nextBlocks: [],
     pieces: [initialQueen(true), ...initialBlacks()],
   },
 };

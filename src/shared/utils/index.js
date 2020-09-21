@@ -22,3 +22,4 @@ export * from './delete-piece-from-board';
 export * from './add-piece-to-board';
 export * from './get-piece-types';
 export * from './get-en-passant-status';
+export * from './validate-status';

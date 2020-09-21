@@ -11,6 +11,7 @@ import {
   handleEnableBlocks,
   deletePieceFromBoard,
   addPieceToBoard,
+  validateStatus,
 } from '../utils';
 import { PieceType, UpdateModeType } from '../constants';
 
@@ -30,6 +31,8 @@ const BoardActionType = {
   DELETE_PIECE_CONFIRM: 'DELETE_PIECE_CONFIRM',
   TOGGLE_UPDATE_MODE: 'TOGGLE_UPDATE_MODE',
   CLOSE_UPDATE_MODE_POPUP: 'CLOSE_UPDATE_MODE_POPUP',
+  // Check valid status after n moves
+  VALIDATE_STATUS: 'VALIDATE_STATUS',
 };
 
 export const useBoard = (state) => {
@@ -158,6 +161,13 @@ export const useBoard = (state) => {
     });
   }, []);
 
+  const validateStatus = useCallback((validateStatusInfo) => {
+    dispatch({
+      type: BoardActionType.VALIDATE_STATUS,
+      validateStatusInfo,
+    });
+  }, []);
+
   return {
     boardState,
     handleClick,
@@ -168,6 +178,7 @@ export const useBoard = (state) => {
     handleCloseUpdateModePopup,
     handleDeletePiece,
     handleAddPiece,
+    validateStatus,
   };
 };
 
@@ -187,6 +198,7 @@ function boardReducer(state, action) {
     isWhiteNext,
     isWhite,
     availablePositions,
+    movesCount,
   } = state;
 
   let newState;
@@ -259,12 +271,30 @@ function boardReducer(state, action) {
         ...newState,
         isUpdateModeOpened: !isUpdateModeOpened,
       };
+    // Toggle update mode
+    case BoardActionType.VALIDATE_STATUS:
+      const { validateStatusInfo } = action;
+      const { piece } = state;
+      const isValid = validateStatus(
+        validateStatusInfo.nextBlocks,
+        movesCount,
+        piece
+      );
+      return {
+        ...state,
+        statusPopup: {
+          validateStatusInfo: validateStatusInfo,
+          open: true,
+          isValidMoved: isValid,
+        },
+      };
     // Main cases are bellow
     case BoardActionType.UPDATE_BOARD:
       return {
         ...state,
         board: newBoard,
         isUpdateModeOpened: false,
+        movesCount: 0,
       };
     case BoardActionType.PROMOTION:
       return {
@@ -274,6 +304,7 @@ function boardReducer(state, action) {
           piece: null,
           open: false,
         },
+        movesCount: movesCount + 1,
       };
     case BoardActionType.GET_NEW_POSITIONS:
       newState = handleGetNewPositions({ ...state, block });
@@ -307,6 +338,7 @@ function boardReducer(state, action) {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
+        movesCount: movesCount + 1,
       };
     case BoardActionType.CASTLING_MOVES:
       newState = handleCastlingMove({
@@ -326,6 +358,7 @@ function boardReducer(state, action) {
           isWhiteNext: !isWhiteNext,
           isWhite: !isWhite,
         }),
+        movesCount: movesCount + 1,
       };
     case BoardActionType.NORMAL_MOVES:
       newState = handleNormalMove({ ...state, block });
