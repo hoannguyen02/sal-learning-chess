@@ -4,12 +4,12 @@ import './index.scss';
 import Status from './Status';
 
 const StatusPopup = (props) => {
-  const { open, isValidMoved } = props;
+  const { open } = props;
 
   return (
     <>
       <Backdrop open={open} position="absolute" />
-      <Status isValidMoved={isValidMoved} open={open} />
+      <Status {...props} />
     </>
   );
 };

@@ -1,11 +1,15 @@
 import React from 'react';
 
 const Status = (props) => {
-  const { isValidMoved, open } = props;
+  const { isValidMoved, open, onTryAgain, onNext } = props;
   return (
     <div className={`chess-board-status ${open ? 'open' : ''}`}>
       {isValidMoved ? 'success' : 'failed'}
-      {isValidMoved ? <button>Next</button> : <button>Try again</button>}
+      {isValidMoved ? (
+        <button onClick={onNext}>Next</button>
+      ) : (
+        <button onClick={onTryAgain}>Try again</button>
+      )}
     </div>
   );
 };

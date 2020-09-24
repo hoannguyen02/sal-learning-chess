@@ -27,6 +27,8 @@ const Board = (props) => {
     handleDeletePiece,
     handleAddPiece,
     validateStatus,
+    handleNextStatusPopup,
+    handleTryAgainStatusPopup,
   } = useBoard({
     board: null,
     currentBlock: null,
@@ -48,7 +50,6 @@ const Board = (props) => {
     },
     movesCount: 0,
     statusPopup: {
-      validateStatusInfo: null,
       open: false,
       isValidMoved: false,
     },
@@ -117,7 +118,13 @@ const Board = (props) => {
           board={board}
         />
       )}
-      {statusPopup && statusPopup.open && <StatusPopup {...statusPopup} />}
+      {statusPopup && statusPopup.open && (
+        <StatusPopup
+          {...statusPopup}
+          onNext={handleNextStatusPopup}
+          onTryAgain={handleTryAgainStatusPopup}
+        />
+      )}
     </div>
   ) : (
     ''

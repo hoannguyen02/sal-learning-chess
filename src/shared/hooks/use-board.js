@@ -33,6 +33,8 @@ const BoardActionType = {
   CLOSE_UPDATE_MODE_POPUP: 'CLOSE_UPDATE_MODE_POPUP',
   // Check valid status after n moves
   VALIDATE_STATUS: 'VALIDATE_STATUS',
+  TRY_AGAIN: 'TRY_AGAIN',
+  NEXT_MOVE: 'NEXT_MOVE',
 };
 
 export const useBoard = (state) => {
@@ -161,12 +163,25 @@ export const useBoard = (state) => {
     });
   }, []);
 
+  // Validate status funcs are bellow
   const validateStatus = useCallback((validateStatusInfo) => {
     dispatch({
       type: BoardActionType.VALIDATE_STATUS,
       validateStatusInfo,
     });
   }, []);
+
+  const handleNextStatusPopup = () => {
+    dispatch({
+      type: BoardActionType.NEXT_MOVE,
+    });
+  };
+
+  const handleTryAgainStatusPopup = () => {
+    dispatch({
+      type: BoardActionType.TRY_AGAIN,
+    });
+  };
 
   return {
     boardState,
@@ -179,6 +194,8 @@ export const useBoard = (state) => {
     handleDeletePiece,
     handleAddPiece,
     validateStatus,
+    handleNextStatusPopup,
+    handleTryAgainStatusPopup,
   };
 };
 
@@ -203,6 +220,7 @@ function boardReducer(state, action) {
 
   let newState;
   switch (type) {
+    //
     // Add piece
     case BoardActionType.ADD_PIECE:
       return {
@@ -271,7 +289,7 @@ function boardReducer(state, action) {
         ...newState,
         isUpdateModeOpened: !isUpdateModeOpened,
       };
-    // Toggle update mode
+    // Validate status
     case BoardActionType.VALIDATE_STATUS:
       const { validateStatusInfo } = action;
       const { piece } = state;
@@ -283,9 +301,17 @@ function boardReducer(state, action) {
       return {
         ...state,
         statusPopup: {
-          validateStatusInfo: validateStatusInfo,
           open: true,
           isValidMoved: isValid,
+        },
+      };
+    // Handle next move
+    case BoardActionType.NEXT_MOVE:
+      return {
+        ...state,
+        statusPopup: {
+          open: false,
+          isValidMoved: false,
         },
       };
     // Main cases are bellow
