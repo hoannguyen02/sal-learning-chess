@@ -314,6 +314,18 @@ function boardReducer(state, action) {
           isValidMoved: false,
         },
       };
+
+    // Handle try again
+    case BoardActionType.TRY_AGAIN:
+      return {
+        ...state,
+        board: state.oldBoard,
+        oldBoard: null,
+        statusPopup: {
+          open: false,
+          isValidMoved: false,
+        },
+      };
     // Main cases are bellow
     case BoardActionType.UPDATE_BOARD:
       return {
@@ -358,6 +370,7 @@ function boardReducer(state, action) {
       return {
         ...state,
         ...newState,
+        oldBoard: state.board,
         currentBlock: null,
         availablePositions: null,
         ...(!isWhitePlayOnly && {

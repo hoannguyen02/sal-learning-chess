@@ -30,6 +30,7 @@ const Board = (props) => {
     handleNextStatusPopup,
     handleTryAgainStatusPopup,
   } = useBoard({
+    oldBoard: null,
     board: null,
     currentBlock: null,
     isWhiteNext: true,

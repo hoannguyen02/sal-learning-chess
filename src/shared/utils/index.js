@@ -23,3 +23,4 @@ export * from './add-piece-to-board';
 export * from './get-piece-types';
 export * from './get-en-passant-status';
 export * from './validate-status';
+export * from './copy-board-state';
